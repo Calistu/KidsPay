@@ -7,6 +7,7 @@ if(!class_exists('WP_List_Table')){
 
 class KPComprasList extends WP_List_Table{
   public function prepare_items(){
+
     $columns = $this->get_columns();
     $hidden = $this->get_hidden_columns();
     $sortable = $this->get_sortable_columns();
@@ -16,7 +17,7 @@ class KPComprasList extends WP_List_Table{
 
     $currentPage = $this->get_pagenum();
     $perPage = 2;
-    $totalItems = count($data);
+    $totalItems = count($data)-1;
 
     $this->set_pagination_args( array(
         'total_items' => $totalItems,
@@ -30,9 +31,9 @@ class KPComprasList extends WP_List_Table{
 
   public function get_columns(){
     return array(
-      'codigo' => 'Código',
-      'titulo' => 'Título',
-      'descricao' => 'Descrição',
+      'codigo' => 'Id Compra',
+      'produto' => 'Descrição Produto',
+      'valor' => 'Valor',
       'data' => 'Data'
     );
   }
@@ -48,14 +49,11 @@ class KPComprasList extends WP_List_Table{
   }
 
   private function get_data(){
+    $usuario = new WP_User();
+    global $wpdb;
     $dataatual = date('Y-m-d H:i:s');
     $data = array();
-    $data[] = array(
-      'codigo' => 1,
-      'titulo' => 'João',
-      'descricao' => 'João V. Calisto',
-      'data' => '2013'
-    );
+    $data[] = $wpdb->query("select * from {$wpdb->prefix}pedidos where cliente = $usuario->ID");
     return $data;
   }
 
@@ -63,8 +61,8 @@ class KPComprasList extends WP_List_Table{
   public function column_default( $item, $column_name ){
     switch( $column_name ) {
         case 'codigo':
-        case 'titulo':
-        case 'descricao':
+        case 'produto':
+        case 'valor':
         case 'data':
             return $item[ $column_name ];
 

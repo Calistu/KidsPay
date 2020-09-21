@@ -13,13 +13,13 @@ Class KidsPayPlugin{
   }
 
   public static function desativar(){
-    $desativacao = new KidsPayDesinstalacao();
-    $desativacao->desinstalar();
+  //  $desativacao = new KidsPayDesinstalacao();
+  //  $desativacao->desinstalar();
   }
 
   public static function desinstalar(){
     $desinstalacao = new KidsPayDesinstalacao();
-    register_deactivation_hook(KP_PLUGIN_FILE, array($desinstalacao, 'desinstalar'));
+    $desinstalacao->desinstalar();
   }
 }
 

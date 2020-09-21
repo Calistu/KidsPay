@@ -19,6 +19,11 @@ function kidspay_compras_menu_page_display(){
     $compras = new KPComprasList();
     $compras->prepare_items();
     $compras->display();
+
+    if(!$compras->totalItems){
+      echo $compras->no_items();
+    }
+
     "</div>";
 }
 

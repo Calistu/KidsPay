@@ -5,11 +5,22 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 class KidsPayInstalacao{
   public static function get_simp_tables_names(){
     $tabelas = array(
+      "status",
+      "bancos",
+      "tipo_movs",
+      "conds_pag",
+      "status",
       "clientes",
-      "docs",
+      "unidades",
+      "prod_grupo",
+      "produtos",
+      "estoques",
+      "pedidos",
+      "movimentos",
       "cidades",
       "ceps",
-      "estados");
+      "estados"
+      );
 
     return $tabelas;
   }
@@ -29,28 +40,103 @@ class KidsPayInstalacao{
     $wpdb->query('SET sql_notes = 1;');
   }
 
-  public static function get_pref_tables_names(){
-    global $wpdb;
-    $tabelas = array(
-      "{$wpdb->prefix}clientes",
-      "{$wpdb->prefix}docs",
-      "{$wpdb->prefix}cidades",
-      "{$wpdb->prefix}ceps",
-      "{$wpdb->prefix}estados");
-
-    return $tabelas;
-  }
-
   public static function get_schemas($tabela_name){
     global $wpdb;
     $tabelas = array('clientes' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}clientes(
         id int primary key auto_increment,
-        nome varchar(300) not null);",
+        nome varchar(300) not null,
+        cnpj_cpf varchar(20),
+        ie_rg varchar(20),
+        tipo_pessoa int,
+        cep varchar(15),
+        endereco varchar(50),
+        bairro varchar(30),
+        cidade varchar(30),
+        uf varchar(3),
+        numrua int,
+        cmplemt int);",
 
-      'docs' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}docs(
-        id int primary key,
+      'bancos' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}bancos(
+        id int primary key auto_increment,
+        nome varchar(100),
+        conta varchar(30),
+        tipoconta int(11),
+        agencia varchar(10),
+        nome_usuario varchar(200),
+        documento varchar(30));",
+
+      'conds_pag' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}conds_pag(
+        id int primary key auto_increment,
+        nome varchar(30),
         tipo int,
-        num int);",
+        dfixo_flag int,
+        dfixo int,
+        intervalo int,
+        qnt_parc int );",
+
+      'prod_grupo' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}prod_grupo(
+        id int primary key auto_increment,
+        nome varchar(20),
+        pai int,
+        nivel int);",
+
+      'unidades' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}unidades(
+        id int primary key auto_increment,
+        nome varchar(50),
+        sigla varchar(10),
+        multiplo int(11),
+        medida int(11));",
+
+      'status' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}status(
+        id int primary key auto_increment,
+        nome varchar(20));",
+
+      'tipo_movs' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tipo_movs(
+        id int primary key auto_increment,
+        nome varchar(20),
+        ent_said int);",
+
+      'produtos' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}produtos(
+        id int primary key auto_increment,
+        nome varchar(50),
+        peso float,
+        unidade int,
+        grupo int,
+        observacao varchar(500),
+        foreign key (unidade) references {$wpdb->prefix}unidades(id),
+        foreign key (grupo) references {$wpdb->prefix}prod_grupo(id));",
+
+      'pedidos' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}pedidos(
+        id int primary key auto_increment,
+        tipo int not null,
+        cliente int not null,
+        data datetime,
+        cond_pag int not null,
+        banco int not null,
+        status int not null,
+        foreign key(cliente) references {$wpdb->prefix}clientes(id),
+        foreign key(cond_pag) references {$wpdb->prefix}conds_pag(id),
+        foreign key(banco) references {$wpdb->prefix}bancos(id),
+        foreign key(tipo) references {$wpdb->prefix}tipo_movs(id),
+        foreign key(status) references {$wpdb->prefix}status(id));",
+
+      'estoques' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}estoques(
+        id int primary key auto_increment,
+        nome varchar(20));",
+
+      'movimentos' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}movimentos(
+        id int primary key auto_increment,
+        estoque int not null,
+        pedido int not null,
+        cliente int not null,
+        produto int not null,
+        data datetime,
+        tipo int not null,
+        foreign key(estoque) references {$wpdb->prefix}estoques(id),
+        foreign key(cliente) references {$wpdb->prefix}clientes(id),
+        foreign key(pedido) references {$wpdb->prefix}pedidos(id),
+        foreign key(tipo) references {$wpdb->prefix}tipo_movs(id),
+        foreign key(produto) references {$wpdb->prefix}produtos(id));",
 
       'cidades' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}cidades (
         id_cidade int(11) NOT NULL AUTO_INCREMENT,
@@ -93,10 +179,13 @@ class KidsPayInstalacao{
   public function criar_tabelas(){
     global $wpdb;
     $tabelas = $this->get_simp_tables_names();
-
+    $querys = '';
     foreach($tabelas as $tabela){
-      $wpdb->query($this->get_schemas($tabela));
+      if(!$wpdb->query($this->get_schemas($tabela)))
+        wp_die('Erro ao deletar tabela: ' . $tabela);
+      $querys .= $this->get_schemas($tabela);
     }
+    //die($querys);
   }
 
   public function instalar(){

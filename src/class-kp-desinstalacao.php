@@ -17,12 +17,22 @@ class KidsPayDesinstalacao{
 
   public static function get_simp_tables_names(){
     $tabelas = array(
-      "clientes",
-      "docs",
-      "cidades",
       "ceps",
-      "estados");
-
+      "movimentos",
+      "pedidos",
+      "estoques",
+      "clientes",
+      "produtos",
+      "prod_grupo",
+      "unidades",
+      "cidades",
+      "estados",
+      "conds_pag",
+      "status",
+      "tipo_movs",
+      "bancos",
+      "status"
+      );
     return $tabelas;
   }
 
@@ -30,10 +40,20 @@ class KidsPayDesinstalacao{
     global $wpdb;
     $tabelas = array(
       'clientes' => "{$wpdb->prefix}clientes",
-      'docs' => "{$wpdb->prefix}docs",
+      'prod_grupo' => "{$wpdb->prefix}prod_grupo",
+      'unidades' => "{$wpdb->prefix}unidades",
+      'produtos' => "{$wpdb->prefix}produtos",
+      'estoques' => "{$wpdb->prefix}estoques",
+      'status' => "{$wpdb->prefix}status",
+      'bancos' => "{$wpdb->prefix}bancos",
+      'movimentos' => "{$wpdb->prefix}movimentos",
+      'pedidos' => "{$wpdb->prefix}pedidos",
       'cidades' => "{$wpdb->prefix}cidades",
       'ceps' => "{$wpdb->prefix}ceps",
-      'estados' => "{$wpdb->prefix}estados");
+      'estados' => "{$wpdb->prefix}estados",
+      'tipo_movs' => "{$wpdb->prefix}tipo_movs",
+      'conds_pag' => "{$wpdb->prefix}conds_pag",
+      'status' => "{$wpdb->prefix}status");
 
     $tabela = $this->get_simp_tables_names();
     $key = 0;
@@ -48,7 +68,7 @@ class KidsPayDesinstalacao{
   public function get_schemas($tabela_name){
     global $wpdb;
 
-    $tabelas = "DROP TABLE IF EXISTS {$this->get_pref_tables_names()[$tabela_name]}" ;
+    $tabelas = "DROP TABLE IF EXISTS {$this->get_pref_tables_names()[$tabela_name]};" ;
 
     return $tabelas;
 
@@ -56,16 +76,16 @@ class KidsPayDesinstalacao{
 
   public function deletar_tabelas($tabelas = null){
     global $wpdb;
-    $this->esconder_warnings();
 
     if(!$tabelas)
       $tabelas = $this->get_simp_tables_names();
-
+    $querys = '';
     foreach($tabelas as $tabela){
-      $wpdb->query($this->get_schemas($tabela));
+      if(!$wpdb->query($this->get_schemas($tabela)))
+        wp_die('Erro ao deletar tabela: ' . $tabela);
+      //$querys .= $this->get_schemas($tabela)."<br>";
     }
-
-    $this->mostrar_warnings();
+    //die($querys);
   }
 
   public function desinstalar(){
