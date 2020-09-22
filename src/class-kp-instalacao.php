@@ -15,6 +15,7 @@ class KidsPayInstalacao{
       "prod_grupo",
       "produtos",
       "estoques",
+      "prod_ped",
       "pedidos",
       "movimentos",
       "cidades",
@@ -95,6 +96,17 @@ class KidsPayInstalacao{
         id int primary key auto_increment,
         nome varchar(20),
         ent_said int);",
+
+      'prod_ped' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}prod_ped(
+        pedido int,
+        item int,
+        produto int,
+        unidades float,
+        valor_unit float,
+        desconto float,
+        total float,
+        observacao varchar(200),
+        foreign key(produto) references {$wpdb->prefix}produtos(id));",
 
       'produtos' => "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}produtos(
         id int primary key auto_increment,
@@ -182,7 +194,7 @@ class KidsPayInstalacao{
     $querys = '';
     foreach($tabelas as $tabela){
       if(!$wpdb->query($this->get_schemas($tabela)))
-        wp_die('Erro ao deletar tabela: ' . $tabela);
+        wp_die('Erro ao criar tabela: ' . $tabela);
       $querys .= $this->get_schemas($tabela);
     }
     //die($querys);

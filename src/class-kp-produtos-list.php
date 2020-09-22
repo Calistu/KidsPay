@@ -5,7 +5,7 @@ if(!class_exists('WP_List_Table')){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class KPComprasList extends WP_List_Table{
+class KPProdutosList extends WP_List_Table{
   public function prepare_items(){
 
     $columns = $this->get_columns();
@@ -31,13 +31,12 @@ class KPComprasList extends WP_List_Table{
 
   public function get_columns(){
     return array(
-      'pedido' => 'ID',
-      'produto' => 'Descrição Produto',
-      'unidades' => 'Unidades',
-      'valor_unit' => 'Valor Unitário',
-      'desconto' => 'Desconto',
-      'total' => 'Total',
-      'observacao' => 'Observação'
+      'id' => 'Id',
+      'nome' => 'Descrição Produto',
+      'peso' => 'Peso',
+      'unidade' => 'Unidade',
+      'grupo' => 'Grupo',
+      'observacao' => 'Observacao'
     );
   }
 
@@ -47,15 +46,14 @@ class KPComprasList extends WP_List_Table{
 
   public function get_sortable_columns(){
     return array(
-      'pedido' => array('pedido', true)
+      'id' => array('id', true)
     );
   }
 
   private function table_data(){
-    $usuario = new WP_User();
     global $wpdb;
-    $dataatual = date('Y-m-d H:i:s');
-    $data = $wpdb->get_results("select a.pedido, c.nome, a.unidades, a.valor_unit, a.desconto, a.total, a.observacao from {$wpdb->prefix}prod_ped as a inner join {$wpdb->prefix}pedidos as b inner join {$wpdb->prefix}produtos as c on a.pedido = b.id and a.produto = c.id where b.cliente = $usuario->ID;", ARRAY_A);
+    $data = array();
+    $data =  $wpdb->get_results("select * from {$wpdb->prefix}produtos", ARRAY_A);//);
     
     return $data;
   }
@@ -63,12 +61,11 @@ class KPComprasList extends WP_List_Table{
 
   public function column_default( $item, $column_name ){
     switch( $column_name ) {
-        case 'pedido':
-        case 'produto':
-        case 'unidades':
-        case 'valor_unit':
-        case 'desconto':
-        case 'total':
+        case 'id':
+        case 'nome':
+        case 'peso':
+        case 'unidade':
+        case 'grupo':
         case 'observacao':
             return $item[ $column_name ];
 
@@ -79,7 +76,7 @@ class KPComprasList extends WP_List_Table{
 
   private function sort_data( $a, $b ){
     // Set defaults
-    $orderby = 'pedido';
+    $orderby = 'codigo';
     $order = 'asc';
 
     // If orderby is set, use this as the sort column
