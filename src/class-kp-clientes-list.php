@@ -6,6 +6,7 @@ if(!class_exists('WP_List_Table')){
 }
 
 class KPClientesList extends WP_List_Table{
+
   public function prepare_items(){
 
     $columns = $this->get_columns();
@@ -28,12 +29,16 @@ class KPClientesList extends WP_List_Table{
   }
 
   public function get_columns(){
+    
     return array(
       'id' => 'ID',
+      'registro' => 'Registro',
       'nome' => 'Nome',
-      'cnpj_cpf' => 'CNPJ',
+      'data_nascimento' => 'Data de Nascimento',
       'ie_rg' => 'IE/RG',
-      'cep' => 'CEP'
+      'cnpj_cpf' => 'CNPJ',
+      'daltera' => 'Data Alteração',
+      'situacao' => 'Situação'
     );
   }
 
@@ -43,13 +48,17 @@ class KPClientesList extends WP_List_Table{
 
   public function get_sortable_columns(){
     return array(
-      'id' => array('id',true)
+      'id' => array('id',true),
+      'nome' => array('nome', true),
+      'daltera' => array('daltera', true),
     );
   }
 
   private function table_data(){
     global $wpdb;
-    $data = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}clientes;", ARRAY_A);
+    global $kpdb;
+
+    $data = $wpdb->get_results("SELECT * FROM {$kpdb->prefix}clientes;", ARRAY_A);
 
     return $data;
   }
@@ -57,10 +66,13 @@ class KPClientesList extends WP_List_Table{
   public function column_default( $item, $column_name ){
     switch($column_name){
       case 'id':
+      case 'registro':
       case 'nome':
-      case 'cnpj_cpf':
+      case 'data_nascimento':
       case 'ie_rg':
-      case 'cep':
+      case 'cnpj_cpf':
+      case 'daltera':
+      case 'situacao':
         return $item[ $column_name ];
 
       default:

@@ -31,12 +31,12 @@ class KPProdutosList extends WP_List_Table{
 
   public function get_columns(){
     return array(
-      'id' => 'Id',
-      'nome' => 'Descrição Produto',
-      'peso' => 'Peso',
-      'unidade' => 'Unidade',
-      'grupo' => 'Grupo',
-      'observacao' => 'Observacao'
+      'id_produto' => 'Id',
+      'nome' => 'Nome',
+      'descricao' => 'Descrição Produto',
+      'preco_custo' => 'Preço de Custo',
+      'preco_venda' => 'Preço de Venda',
+      'situacao' => 'Situação'
     );
   }
 
@@ -53,20 +53,20 @@ class KPProdutosList extends WP_List_Table{
   private function table_data(){
     global $wpdb;
     $data = array();
-    $data =  $wpdb->get_results("select * from {$wpdb->prefix}produtos", ARRAY_A);//);
-    
+    $data =  $wpdb->get_results("select * from produtos", ARRAY_A);//);
+
     return $data;
   }
 
 
   public function column_default( $item, $column_name ){
     switch( $column_name ) {
-        case 'id':
+        case 'id_produto':
         case 'nome':
-        case 'peso':
-        case 'unidade':
-        case 'grupo':
-        case 'observacao':
+        case 'descricao':
+        case 'preco_custo':
+        case 'preco_venda':
+        case 'situacao':
             return $item[ $column_name ];
 
         default:
@@ -76,7 +76,7 @@ class KPProdutosList extends WP_List_Table{
 
   private function sort_data( $a, $b ){
     // Set defaults
-    $orderby = 'codigo';
+    $orderby = 'id_produto';
     $order = 'asc';
 
     // If orderby is set, use this as the sort column

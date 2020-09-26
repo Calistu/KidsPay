@@ -9,7 +9,7 @@ class ProdutosWidgets extends WP_Widget {
     );
 
   }
-  
+
 	public function widget( $args, $instance ) {
 
 	}
@@ -20,6 +20,7 @@ class ProdutosWidgets extends WP_Widget {
     <select class='cd-select'>
       <option value='ultimos'>Últimos Adicionados</option>
       <option value='mais_vendas'>Mais Vendidos</option>
+      <option value='cardapio'>Do Cadápio</option>
     </select>
     <?php
 	}

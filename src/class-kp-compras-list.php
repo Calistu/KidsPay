@@ -54,9 +54,10 @@ class KPComprasList extends WP_List_Table{
   private function table_data(){
     $usuario = new WP_User();
     global $wpdb;
+    global $kpdb;
     $dataatual = date('Y-m-d H:i:s');
-    $data = $wpdb->get_results("select a.pedido, c.nome, a.unidades, a.valor_unit, a.desconto, a.total, a.observacao from {$wpdb->prefix}prod_ped as a inner join {$wpdb->prefix}pedidos as b inner join {$wpdb->prefix}produtos as c on a.pedido = b.id and a.produto = c.id where b.cliente = $usuario->ID;", ARRAY_A);
-    
+    $data = $wpdb->get_results(";", ARRAY_A);
+
     return $data;
   }
 
