@@ -29,75 +29,75 @@ class KPClientesList extends WP_List_Table{
   }
 
   public function get_columns(){
-    
-    return array(
-      'id' => 'ID',
-      'registro' => 'Registro',
-      'nome' => 'Nome',
-      'data_nascimento' => 'Data de Nascimento',
-      'ie_rg' => 'IE/RG',
-      'cnpj_cpf' => 'CNPJ',
-      'daltera' => 'Data Alteração',
-      'situacao' => 'Situação'
-    );
-  }
 
-  public function get_hidden_columns(){
-    return array();
-  }
+        return array(
+          'id_cliente' => 'ID',
+          'registro' => 'Registro',
+          'nome' => 'Nome',
+          'dtnascto' => 'Data de Nascimento',
+          'rg' => 'IE/RG',
+          'cpf' => 'CNPJ',
+          'dtaltera' => 'Data Alteração',
+          'situacao' => 'Situação'
+        );
+      }
 
-  public function get_sortable_columns(){
-    return array(
-      'id' => array('id',true),
-      'nome' => array('nome', true),
-      'daltera' => array('daltera', true),
-    );
-  }
+      public function get_hidden_columns(){
+        return array('id_cliente');
+      }
 
-  private function table_data(){
-    global $wpdb;
-    global $kpdb;
+      public function get_sortable_columns(){
+        return array(
+          'id_cliente' => array('id',true),
+          'nome' => array('nome', true),
+          'dtaltera' => array('daltera', true),
+        );
+      }
 
-    $data = $wpdb->get_results("SELECT * FROM {$kpdb->prefix}clientes;", ARRAY_A);
+      private function table_data(){
+        global $wpdb;
+        global $kpdb;
 
-    return $data;
-  }
+        $data = $wpdb->get_results("SELECT * FROM clientes;", ARRAY_A);
 
-  public function column_default( $item, $column_name ){
-    switch($column_name){
-      case 'id':
-      case 'registro':
-      case 'nome':
-      case 'data_nascimento':
-      case 'ie_rg':
-      case 'cnpj_cpf':
-      case 'daltera':
-      case 'situacao':
-        return $item[ $column_name ];
+        return $data;
+      }
 
-      default:
-          return print_r( $item, true ) ;
+      public function column_default( $item, $column_name ){
+        switch($column_name){
+          case 'id_cliente':
+          case 'registro':
+          case 'nome':
+          case 'dtnascto':
+          case 'rg':
+          case 'cpf':
+          case 'dtaltera':
+          case 'situacao':
+            return $item[ $column_name ];
+
+          default:
+              return print_r( $item, true ) ;
+        }
+      }
+
+      private function sort_data( $a, $b ){
+        $orderby = 'id';
+        $order = 'asc';
+
+        if(!empty($_GET['orderby'])){
+          $orderby = $_GET['orderby'];
+        }
+
+        if(!empty($_GET['order'])){
+          $order = $_GET['order'];
+        }
+
+        $result = strcmp( $a[$orderby], $b[$orderby] );
+        if($order === 'asc')
+        {
+            return $result;
+        }
+
+        return -$result;
+      }
     }
-  }
-
-  private function sort_data( $a, $b ){
-    $orderby = 'id';
-    $order = 'asc';
-
-    if(!empty($_GET['orderby'])){
-      $orderby = $_GET['orderby'];
-    }
-
-    if(!empty($_GET['order'])){
-      $order = $_GET['order'];
-    }
-
-    $result = strcmp( $a[$orderby], $b[$orderby] );
-    if($order === 'asc')
-    {
-        return $result;
-    }
-
-    return -$result;
-  }
-}

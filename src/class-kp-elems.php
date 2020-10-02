@@ -1,6 +1,6 @@
 <?php
 
-class KidsPayElems{
+class KidsPayForms{
 
   public $table = '';
   public $lista = array();
@@ -9,7 +9,7 @@ class KidsPayElems{
   public function noneOptions(){
     ?>
     <select>
-      <option value='vazio'> Nenhuma Cadastrada </option>
+      <option value='vazio'> Sem Cadastro</option>
     </select>
     <?php
   }
@@ -51,19 +51,51 @@ class KidsPayElems{
     return $this->lista;
   }
 
-  public function Options_display(){
+  public function Options_display($var = ''){
     $options = $this->lista;
 
     if(!count($options)){
       $this->noneOptions();
     }else{
-      echo "<select>";
+      echo "<select name='$var'>";
       foreach ($options as $list) {
-        echo "<option value='{$list['nome']}'> {$list['nome']} </option>";
+        echo "<option name='aluno-{$list['nome']}' value='{$list['nome']}'> {$list['nome']} </option>";
       }
       echo "</select>";
     }
 
+  }
+
+  //mensagem personalizada sem status
+  function Print($msg) {
+      ?>
+      <div class="notice">
+          <p><?php _e( $msg, 'kidspay' ); ?></p>
+      </div>
+      <?php
+  }
+
+  //mensagem personalizada de conclusão
+  function PrintOk($msg) {
+      ?>
+      <div class="notice notice-success is-dismissible">
+          <p><?php _e( $msg, 'kidspay' ); ?></p>
+      </div>
+      <?php
+  }
+
+  //mensagem personalizada de erro
+  public function PrintErro($msg){
+    ?>
+     <div class="notice error my-acf-notice is-dismissible" >
+        <p>
+          <?php
+            _e( $msg , 'kidspay' );
+            $this->erro = 1;
+          ?>
+        </p>
+    </div>
+    <?php
   }
 }
 
