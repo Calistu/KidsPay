@@ -1,0 +1,51 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "742f30965300269513344d12d4d01851",
+    "packages": [
+        {
+            "name": "delboy1978uk/jpgraph",
+            "version": "v4.2.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/delboy1978uk/jpgraph.git",
+                "reference": "47571f9038b486fe7e20309dfb4f48d18338dd9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/delboy1978uk/jpgraph/zipball/47571f9038b486fe7e20309dfb4f48d18338dd9f",
+                "reference": "47571f9038b486fe7e20309dfb4f48d18338dd9f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "php": "^5.3|^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                },
+                "files": [
+                    "src/definitions.php",
+                    "src/functions.php",
+                    "src/globals.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "jpGraph library composerised and tidied",
+            "time": "2019-03-18T16:57:54+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

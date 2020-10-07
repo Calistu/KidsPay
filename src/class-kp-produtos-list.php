@@ -16,7 +16,7 @@ class KPProdutosList extends WP_List_Table{
     usort( $data, array( &$this, 'sort_data' ) );
 
     $currentPage = $this->get_pagenum();
-    $perPage = 2;
+    $perPage = 10;
     $totalItems = count($data);
 
     $this->set_pagination_args( array(
@@ -46,7 +46,9 @@ class KPProdutosList extends WP_List_Table{
 
   public function get_sortable_columns(){
     return array(
-      'id' => array('id', true)
+      'id_produto' => array('id_produto', true),
+      'preco_custo' => array('preco_custo', true),
+      'preco_venda' => array('preco_venda', true)
     );
   }
 

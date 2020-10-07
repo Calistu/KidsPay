@@ -1,9 +1,10 @@
 <?php
+
 function kidspay_creditos_cmp_page_display(){
   if(isset($_REQUEST['atualizando'])){
     global $wpdb;
     $cliente = new KidsPayClientes();
-    if(isset($_REQUEST['alunos'])){
+    if(isset($_REQUEST['atualizando'])){
       if($aluno = $cliente->get_alunoid_pnome($_REQUEST['alunos'])){
         $res = $wpdb->insert('credito_clientes', array(
           'dtpagamento' => date('Y-m-d'),
@@ -18,7 +19,7 @@ function kidspay_creditos_cmp_page_display(){
           $cliente->PrintOk('Recarregado com sucesso');
         }
       }else{
-
+        $cliente->PrintErro('Não foi possível identificar aluno');
       }
     }
   }
@@ -39,11 +40,12 @@ function kidspay_creditos_cmp_page_display(){
 function kidspay_creditos_estorno_page_display(){
   ?>
   <div class='wrap'>
-    <h1 class='wp-heading-inline'>Recarregar Créditos</h1>
+    <h1 class='wp-heading-inline'>Estornar Créditos</h1>
     <hr class='wp-head-end'>
-    <form action='?page=kidspay-crd-comprar' method="post">
-    <?php
+    <form action='?page=kidspay-crd-estorno' method="post">
 
+    <?php
+      estornar_creditos_html();
     ?>
     </form>
     <?php

@@ -7,6 +7,7 @@ if( !defined('ABSPATH')){
 class KidsPayDB{
   public $prefix;
 }
+
 global $kpdb;
 $kpdb = new KidsPayDB();
 $kpdb->prefix = 'kidspay_';
@@ -42,7 +43,7 @@ function registrar_cadastros(){
   add_menu_page('KidsPay', 'Cadastros', 'read', 'kidspay-cad-tools', 'kidspay_default_cad_page_display', 'dashicons-food', 30);
   //add_submenu_page('kidspay-cad-tools', 'Produtos', 'Produtos', 'manage_options', 'kidspay-cad-produtos', 'kidspay_produtos_cad_page_display');
   add_submenu_page('kidspay-cad-tools', 'Produtos', 'Produtos', 'read', 'kidspay-cad-produtos', 'kidspay_produtos_cad_page_display');
-  add_submenu_page('kidspay-cad-tools', 'Alunos', 'Alunos', 'manage_options', 'kidspay-cad-alunos', 'kidspay_alunos_cad_page_display');
+  add_submenu_page('kidspay-cad-tools', 'Alunos', 'Alunos', 'read', 'kidspay-cad-alunos', 'kidspay_alunos_cad_page_display');
   add_submenu_page('kidspay-cad-tools', 'Clientes', 'Clientes', 'manage_options', 'kidspay-cad-clientes', 'kidspay_clientes_cad_page_display');
   add_submenu_page('kidspay-cad-tools', 'Restrições', 'Restrições', 'read', 'kidspay-cad-restricoes', 'kidspay_restricoes_cad_page_display');
 }

@@ -37,6 +37,7 @@ function kidspay_produtos_cad_page_display(){
     <?php
 
       cadastrar_produtos_html($acao);
+
       switch ($acao) {
         case 'cad':
           $res = $wpdb->insert('produtos',array(
@@ -79,7 +80,7 @@ function kidspay_clientes_cad_page_display(){
   /*-------------------------------------------------------------------*/
     $cliente = new KidsPayClientes();
 
-
+    cadastrar_cliente_html();
   /*-------------------------------------------------------------------*/
   ?>
   </div>
@@ -104,14 +105,48 @@ function kidspay_creditos_cad_page_display(){
 function kidspay_alunos_cad_page_display(){
   ?>
   <div class='wrap'>
-    <h1 class='wp-heading-inline'>Créditos</h1>
+    <h1 class='wp-heading-inline'>Alunos</h1>
     <hr class='wp-head-end'>
+    <form action='?page=kidspay-cad-alunos' method='post'>
   <?php
+  global $wpdb;
+  $acao = $_REQUEST['action'];
+  $form = new KidsPayForms();
+
+  switch ($acao) {
+    case 'cad':
+    if(!isset($_REQUEST['nome'])){
+      $form->PrintErro("Insira o nome");
+    }else{
+      $cliente = new KidsPayClientes();
+      $res = $wpdb->insert('alunos',array(
+        'nome' => $_REQUEST['nome'],
+        'id_cliente' => $cliente->get_loginid()
+        )
+      );
+      if( !$res ){
+        if($wpdb->print_error()){
+          $form->PrintErro($wpdb->print_error());
+        }
+      }else{
+        $form = new KidsPayForms();
+        $form->PrintOk('Cadastrado com Sucesso!');
+      }
+    }
+      break;
+    case 'alt':
+
+      break;
+    case 'del':
+
+      break;
+  }
+
   /*-------------------------------------------------------------------*/
-
-
+  cadastrar_alunos_html('cad');
   /*-------------------------------------------------------------------*/
   ?>
+  </form>
   </div>
   <?php
 }

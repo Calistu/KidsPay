@@ -16,7 +16,7 @@ class KPClientesList extends WP_List_Table{
     $data = $this->table_data();
     usort( $data, array( &$this, 'sort_data' ) );
     $currentPage = $this->get_pagenum();
-    $perPage = 5;
+    $perPage = 15;
     $totalItems = sizeof($data)-1;
 
     $this->set_pagination_args( array(
@@ -32,11 +32,10 @@ class KPClientesList extends WP_List_Table{
 
         return array(
           'id_cliente' => 'ID',
-          'registro' => 'Registro',
           'nome' => 'Nome',
           'dtnascto' => 'Data de Nascimento',
-          'rg' => 'IE/RG',
-          'cpf' => 'CNPJ',
+          'rg' => 'RG',
+          'cpf' => 'CPF',
           'dtaltera' => 'Data Alteração',
           'situacao' => 'Situação'
         );
@@ -66,7 +65,6 @@ class KPClientesList extends WP_List_Table{
       public function column_default( $item, $column_name ){
         switch($column_name){
           case 'id_cliente':
-          case 'registro':
           case 'nome':
           case 'dtnascto':
           case 'rg':
