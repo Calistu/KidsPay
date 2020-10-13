@@ -47,7 +47,7 @@ class KPClientesList extends WP_List_Table{
 
       public function get_sortable_columns(){
         return array(
-          'id_cliente' => array('id',true),
+          'id_cliente' => array('id_cliente',true),
           'nome' => array('nome', true),
           'dtaltera' => array('daltera', true),
         );
@@ -79,7 +79,7 @@ class KPClientesList extends WP_List_Table{
       }
 
       private function sort_data( $a, $b ){
-        $orderby = 'id';
+        $orderby = 'id_cliente';
         $order = 'asc';
 
         if(!empty($_GET['orderby'])){

@@ -37,11 +37,11 @@ class KidsPayClientes extends KidsPayForms{
     }
   }
 
-  public function getCredito($aluno = 1){
+  public function getCredito(){
     global $wpdb;
     $form = new KidsPayForms();
 
-    $res = $wpdb->get_results($wpdb->prepare('SELECT SUM(valor) FROM credito_clientes WHERE id_cliente = ' . get_current_user_id() . " and id_aluno = '$aluno'"), ARRAY_A);
+    $res = $wpdb->get_results($wpdb->prepare('SELECT SUM(valor) FROM credito_clientes WHERE id_cliente = ' . get_current_user_id()), ARRAY_A);
 
     if($res and $res[0]['SUM(valor)']){
       echo $res[0]['SUM(valor)'];
@@ -53,12 +53,41 @@ class KidsPayClientes extends KidsPayForms{
 
   public function get_alunos(){
     global $wpdb;
+    $form = new KidsPayForms();
     $res = $wpdb->get_results('SELECT id_aluno, nome FROM alunos WHERE id_cliente = ' . get_current_user_id(), ARRAY_A);
-    if($res){
-      foreach ($res as $key => $value) {
-        $this->alunos[$key] = $value;
+
+    //receber creditos de cada aluno
+    foreach ($res as $key => $value) {
+
+     $credito = $wpdb->get_results(
+      'SELECT SUM(valor) FROM credito_clientes'
+      . ' WHERE id_cliente = '
+      . get_current_user_id()
+      . ' and id_aluno = '
+      . $value['id_aluno'],
+      ARRAY_A);
+      if($credito){
+        $res[$key]['credito'] = $credito[0]['SUM(valor)'];
+      }else{
+        $res[$key]['credito'] = 0;
       }
+
+      //receber gastos de cada aluno
+      $gastos = $wpdb->get_results(
+      'SELECT SUM(total) FROM vendas'
+      . ' WHERE id_cliente = '
+      . get_current_user_id()
+      . ' and id_aluno = '
+      . $value['id_aluno'],
+      ARRAY_A);
+      if($gastos){
+          $res[$key]['gastos'] = $gastos[0]['SUM(total)'];
+      }else{
+        $res[$key]['gastos'] = 0;
+      }
+
     }
-    return $this->alunos;
+
+    return $res;
   }
 }

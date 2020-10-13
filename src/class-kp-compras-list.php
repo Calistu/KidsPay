@@ -16,7 +16,7 @@ class KPComprasList extends WP_List_Table{
     usort( $data, array( &$this, 'sort_data' ) );
 
     $currentPage = $this->get_pagenum();
-    $perPage = 2;
+    $perPage = 20;
     $totalItems = count($data);
 
     $this->set_pagination_args( array(
@@ -31,47 +31,58 @@ class KPComprasList extends WP_List_Table{
 
   public function get_columns(){
     return array(
-      'pedido' => 'ID',
-      'produto' => 'Descrição Produto',
-      'unidades' => 'Unidades',
-      'valor_unit' => 'Valor Unitário',
-      'desconto' => 'Desconto',
+      'id_venda' => 'ID',
+      'dtvenda' => 'Data',
       'total' => 'Total',
-      'observacao' => 'Observação'
+      'situacao' => 'Situacao',
+      'id_aluno' => 'Aluno',
+      'total' => 'Total',
     );
   }
 
   public function get_hidden_columns(){
-    return array();
+    return array('id_venda');
   }
 
   public function get_sortable_columns(){
     return array(
-      'pedido' => array('pedido', true)
+      'dtvenda' => array('dtvenda', true),
+      'id_aluno' => array('id_aluno', true),
+      'total' => array('total', true),
     );
   }
 
   private function table_data(){
     $usuario = new WP_User();
     global $wpdb;
-    global $kpdb;
+    $cliente = new KidsPayClientes();
     $dataatual = date('Y-m-d H:i:s');
-    $data = $wpdb->get_results(";", ARRAY_A);
-
+    $data = $wpdb->get_results("SELECT * FROM vendas WHERE id_cliente = {$cliente->get_loginid()}" , ARRAY_A);
+    //echo $wpdb->prepare("SELECT * FROM vendas WHERE id_cliente = {$cliente->get_loginid()}");
     return $data;
   }
 
 
   public function column_default( $item, $column_name ){
     switch( $column_name ) {
-        case 'pedido':
-        case 'produto':
-        case 'unidades':
-        case 'valor_unit':
-        case 'desconto':
+        case 'id_aluno':
+          global $wpdb;
+          $res = $wpdb->get_results("SELECT nome FROM alunos WHERE id_aluno = {$item[ $column_name ]}", ARRAY_A);
+          return $res[0][ 'nome' ];
+        case 'dtvenda':
+          $tempo = strtotime($item[ $column_name ]);
+          return date("d/m/Y - H:i", $tempo);
         case 'total':
-        case 'observacao':
-            return $item[ $column_name ];
+          return "R$ " . number_format(floatval($item[ $column_name ]),2);
+        case 'situacao':
+          if($item[ $column_name ] === 'A'){
+            return 'Ativo';
+          }else{
+            return 'Inativo';
+          }
+        case 'id_venda':
+        case 'total':
+          return $item[ $column_name ];
 
         default:
             return print_r( $item, true ) ;
@@ -80,7 +91,7 @@ class KPComprasList extends WP_List_Table{
 
   private function sort_data( $a, $b ){
     // Set defaults
-    $orderby = 'pedido';
+    $orderby = 'dtvenda';
     $order = 'asc';
 
     // If orderby is set, use this as the sort column

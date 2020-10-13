@@ -28,7 +28,9 @@ function kidspay_produtos_cad_page_display(){
 
   global $wpdb;
   $produto = new KidsPayProdutos();
-  $acao = $_REQUEST['action'];
+  if(isset($_REQUEST['action']))
+    $acao = $_REQUEST['action'];
+
   ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Cadastros Produtos</h1>
@@ -36,12 +38,11 @@ function kidspay_produtos_cad_page_display(){
     <form action='?page=kidspay-cad-produtos' method='post'>
     <?php
 
-      cadastrar_produtos_html($acao);
-
+      $form = new KidsPayForms();
       switch ($acao) {
         case 'cad':
+          $form->Print("Cadastrando Novo");
           $res = $wpdb->insert('produtos',array(
-
             'nome' => $_REQUEST['nome'],
             'descricao' => $_REQUEST['descricao'],
             'preco_custo' => $_REQUEST['preco_custo'],
@@ -54,17 +55,63 @@ function kidspay_produtos_cad_page_display(){
               die($wpdb->print_error());
             }
           }else{
-            $form = new KidsPayForms();
             $form->PrintOk('Cadastrado com Sucesso!');
+            $acao = "alt";
           }
           break;
         case 'alt':
-
+          $id = $_REQUEST['id'];
+          $res = $wpdb->get_results("SELECT * FROM produtos WHERE id_produto = {$id};", ARRAY_A);
+          if($res and $res[0]){
+            $form->Print("Alterando produto cód.: {$id}");
+            $_REQUEST['id_produto'] = $res[0]['id_produto'];
+            $_REQUEST['nome'] = $res[0]['nome'];
+            $_REQUEST['descricao'] = $res[0]['descricao'];
+            $_REQUEST['preco_custo'] = $res[0]['preco_custo'];
+            $_REQUEST['preco_venda'] = $res[0]['preco_venda'];
+            $_REQUEST['situacao'] = $res[0]['situacao'];
+            $acao = 'alt2';
+          }else{
+            $form->PrintErro("Não foi possível receber produto");
+          }
+          break;
+        case 'alt2':
+          $form->PrintOk("Atualizando...");
+          if(isset($_REQUEST['id']))
+            $id = $_REQUEST['id'];
+          else{
+            $form->PrintErro("Requisição invalida");
+            break;
+          }
+          $res = $wpdb->update('produtos', array(
+            'nome' => $_REQUEST['nome'],
+            'descricao' => $_REQUEST['descricao'],
+            'preco_custo' => $_REQUEST['preco_custo'],
+            'preco_venda' => $_REQUEST['preco_venda'],
+            'situacao' => $_REQUEST['situacao'],
+          ),array('id_produto' => $id));
+          if($res){
+            $form->PrintOk("Atualizado com sucesso");
+            $acao = 'alt';
+          }else{
+            $form->PrintErro("Não foi possível atualizar produto - {$wpdb->print_error()}");
+          }
           break;
         case 'del':
-
+          $id = $_REQUEST['id'];
+          if(($wpdb->delete('produtos', array(
+            'id_produto' => $id)
+          ))){
+            $form->PrintOk("Deletado com Sucesso");
+          }else{
+            $form->PrintOk("Nenhum produto deletado");
+          }
           break;
+        default:
+          $acao = 'cad';
+          $form->Print("Cadastrando Novo");
       }
+      cadastrar_produtos_html($acao);
     ?>
     </form>
   </div>
@@ -109,8 +156,13 @@ function kidspay_alunos_cad_page_display(){
     <hr class='wp-head-end'>
     <form action='?page=kidspay-cad-alunos' method='post'>
   <?php
+
   global $wpdb;
-  $acao = $_REQUEST['action'];
+  $acao = '';
+
+  if(isset($_REQUEST['action']))
+    $acao = $_REQUEST['action'];
+
   $form = new KidsPayForms();
 
   switch ($acao) {

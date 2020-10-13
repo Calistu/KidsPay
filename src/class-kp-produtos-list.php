@@ -40,13 +40,25 @@ class KPProdutosList extends WP_List_Table{
     );
   }
 
+  public function column_nome($item){
+    $actions = array(
+      'edit' => sprintf("<a href='?page=kidspay-cad-produtos&action=alt&id=%s'>%s</a> ", $item['id_produto'], __('Editar', 'kidspay')),
+      'delete' => sprintf("<a href='?page=kidspay-rel-produtos&action=del&id=%s'>%s</a> ", $item['id_produto'], __('Deletar', 'kidspay')),
+    );
+
+    return sprintf('%s %s',
+        $item['nome'],
+        $this->row_actions($actions));
+  }
+
   public function get_hidden_columns(){
-    return array();
+    return array(
+      'id_produto'
+    );
   }
 
   public function get_sortable_columns(){
     return array(
-      'id_produto' => array('id_produto', true),
       'preco_custo' => array('preco_custo', true),
       'preco_venda' => array('preco_venda', true)
     );
@@ -63,14 +75,17 @@ class KPProdutosList extends WP_List_Table{
 
   public function column_default( $item, $column_name ){
     switch( $column_name ) {
+        case 'situacao':
+          if($item[ $column_name ] === 'A')
+            return 'Ativo';
+
         case 'id_produto':
         case 'nome':
         case 'descricao':
         case 'preco_custo':
         case 'preco_venda':
-        case 'situacao':
-            return $item[ $column_name ];
 
+          return $item[ $column_name ];
         default:
             return print_r( $item, true ) ;
     }

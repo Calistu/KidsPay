@@ -52,7 +52,7 @@ function registrar_relatorios(){
   add_menu_page('KidsPay', 'Relatórios', 'read', 'kidspay-rel-tools', 'kidspay_compras_rel_page_display', 'dashicons-media-text', 30);
   add_submenu_page('kidspay-rel-tools', 'Compras', 'Compras', 'read', 'kidspay-rel-compras', 'kidspay_compras_rel_page_display');
   add_submenu_page('kidspay-rel-tools', 'Clientes', 'Clientes', 'manage_options', 'kidspay-rel-clientes', 'kidspay_clientes_rel_page_display');
-  add_submenu_page('kidspay-rel-tools', 'Produtos', 'Produtos', 'read', 'kidspay-rel-produtos', 'kidspay_produtos_rel_page_display');
+  add_submenu_page('kidspay-rel-tools', 'Produtos', 'Produtos', 'manage_options', 'kidspay-rel-produtos', 'kidspay_produtos_rel_page_display');
   add_submenu_page('kidspay-rel-tools', 'Restrições', 'Restrições', 'read', 'kidspay-rel-restricoes', 'kidspay_restricoes_rel_page_display');
   add_submenu_page('kidspay-rel-tools', 'Créditos', 'Créditos', 'read', 'kidspay-rel-creditos', 'kidspay_creditos_rel_page_display');
 }

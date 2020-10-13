@@ -11,15 +11,22 @@ function kidspay_default_rel_page_display(){
   ";
 }
 
+function kidspay_compras_itens(){
+
+}
+
 function kidspay_compras_rel_page_display(){
-  echo "
+  ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Compras</h1>
-    <hr class='wp-head-end'>";
+    <hr class='wp-head-end'>
+    <?php
     $compras = new KPComprasList();
     $compras->prepare_items();
     $compras->display();
-    "</div>";
+    ?>
+    </div>
+    <?php
 }
 
 function kidspay_restricoes_rel_page_display(){
@@ -51,15 +58,34 @@ function kidspay_clientes_rel_page_display(){
 
 
 function kidspay_produtos_rel_page_display(){
-  echo "
+  ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Produtos</h1>
-    <hr class='wp-head-end'>";
+    <hr class='wp-head-end'>
+    <?php
+    $acao = '';
+    global $wpdb;
+    if(isset($_REQUEST['action']))
+      $acao = $_REQUEST['action'];
+    $form = new KidsPayForms();
+    switch ($acao) {
+      case 'del':
+        $id = $_REQUEST['id'];
+        if(($wpdb->delete('produtos', array(
+          'id_produto' => $id)
+        ))){
+          $form->PrintOk("Deletado com Sucesso");
+        }else{
+          $form->PrintOk("Nenhum produto deletado");
+        }
+        break;
+    }
     $produtos = new KPProdutosList();
     $produtos->prepare_items();
     $produtos->display();
-  "</div>
-  ";
+    ?>
+  </div>
+  <?php
 }
 
 function kidspay_creditos_rel_page_display(){
