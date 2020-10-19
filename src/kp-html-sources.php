@@ -9,6 +9,9 @@
       <?php
         $cliente = new KidsPayClientes();
         $alunos = $cliente->get_alunos();
+        if(!count($alunos)){
+          $cliente->Print("Não há alunos cadastrados");
+        }
         $cont=0;
         foreach ($alunos as $key => $value) {
           if(!$cont){
@@ -66,10 +69,9 @@
   }
 
   function estornar_creditos_html(){
-    ?>
-
-
-    <?php
+    $creditos = new KPCreditosList();
+    $creditos->prepare_items();
+    $creditos->display();
   }
 
   function cadastrar_cliente_html(){
@@ -100,7 +102,16 @@
         </tr>
         <tr>
           <th scope="row"><label for="situacao">Ativo?</label></th>
-          <td><input type="checkbox" name="situacao" value='A' checked></td>
+          <td><input type="hidden" name="situacao" value='I'></td>
+          <td><input type="checkbox" name="situacao" value='
+            <?php
+              if(isset($_REQUEST['preco_venda'])){
+                echo $_REQUEST['situacao'];
+              }else{
+                echo 'A';
+              }
+                ?>
+                '></td>
         </tr>
         <tr>
           <th>

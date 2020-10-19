@@ -37,24 +37,36 @@ class KidsPayClientes extends KidsPayForms{
     }
   }
 
-  public function getCredito(){
+
+  public function getCredHist($id = null){
     global $wpdb;
-    $form = new KidsPayForms();
 
-    $res = $wpdb->get_results($wpdb->prepare('SELECT SUM(valor) FROM credito_clientes WHERE id_cliente = ' . get_current_user_id()), ARRAY_A);
-
-    if($res and $res[0]['SUM(valor)']){
-      echo $res[0]['SUM(valor)'];
-    }else{
-      $form->PrintErro('Não foi possível calcular saldo de créditos');
-      $form->PrintErro($wpdb->print_error());
+    $args = '';
+    if($id){
+      $args = ' and id_credito_cliente = '.$id;
     }
+
+    $res = $wpdb->get_results('SELECT * FROM credito_clientes WHERE id_cliente = ' . get_current_user_id() . $args, ARRAY_A);
+
+    if($res){
+      foreach ($res as $key => $value){
+        $alunos = $this->get_alunos($value['id_aluno']);
+        $res[$key]['aluno_nome'] = $alunos[0]['nome'];
+      }
+    }
+
+    return $res;
   }
 
-  public function get_alunos(){
+  public function get_alunos($aluno = null){
     global $wpdb;
     $form = new KidsPayForms();
-    $res = $wpdb->get_results('SELECT id_aluno, nome FROM alunos WHERE id_cliente = ' . get_current_user_id(), ARRAY_A);
+    if($aluno){
+      $aluno_args = ' and id_aluno = ' . $aluno;
+    }else{
+      $aluno_args = '';
+    }
+    $res = $wpdb->get_results('SELECT id_aluno, nome FROM alunos WHERE id_cliente = ' . get_current_user_id() . $aluno_args, ARRAY_A);
 
     //receber creditos de cada aluno
     foreach ($res as $key => $value) {
@@ -63,9 +75,12 @@ class KidsPayClientes extends KidsPayForms{
       'SELECT SUM(valor) FROM credito_clientes'
       . ' WHERE id_cliente = '
       . get_current_user_id()
+      . ' and situacao = '
+      . "'A'"
       . ' and id_aluno = '
       . $value['id_aluno'],
       ARRAY_A);
+
       if($credito){
         $res[$key]['credito'] = $credito[0]['SUM(valor)'];
       }else{
@@ -85,6 +100,8 @@ class KidsPayClientes extends KidsPayForms{
       }else{
         $res[$key]['gastos'] = 0;
       }
+
+      $res[$key]['saldo'] = $res[$key]['credito'] - $res[$key]['gastos'];
 
     }
 

@@ -22,6 +22,10 @@
   background-color: #ddd;
 }
 
+.tab active button {
+  background-color: #ddd;
+}
+
 /* Style the tab content */
 .tabcontent {
   display: none;

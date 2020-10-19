@@ -56,7 +56,7 @@ function kidspay_produtos_cad_page_display(){
             }
           }else{
             $form->PrintOk('Cadastrado com Sucesso!');
-            $acao = "alt";
+            $acao = "alt2";
           }
           break;
         case 'alt':
@@ -94,7 +94,10 @@ function kidspay_produtos_cad_page_display(){
             $form->PrintOk("Atualizado com sucesso");
             $acao = 'alt';
           }else{
-            $form->PrintErro("Não foi possível atualizar produto - {$wpdb->print_error()}");
+            if($wpdb->show_errors()){
+              $wpdb->print_error();
+            }
+            $form->PrintErro("Nenhuma informação atualizada");
           }
           break;
         case 'del':

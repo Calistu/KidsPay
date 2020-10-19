@@ -1,5 +1,5 @@
 /*retirei a tabela de usuario e login, será gerenciado pelo framework por questões de segurança e tempo*/
-
+/*mysql -u mabrit05_site -p -h ns818.hostgator.com.br*/
 CREATE TABLE clientes (
     id_cliente int NOT NULL AUTO_INCREMENT,
     registro varchar(20),
@@ -28,6 +28,7 @@ CREATE TABLE alunos (
     id_aluno int NOT NULL AUTO_INCREMENT,
     id_cliente int,
     nome varchar(100),
+    saldo numeric(8,2),
     PRIMARY KEY (id_aluno),
     FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
 );

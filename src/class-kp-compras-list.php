@@ -32,10 +32,10 @@ class KPComprasList extends WP_List_Table{
   public function get_columns(){
     return array(
       'id_venda' => 'ID',
+      'id_aluno' => 'Aluno',
       'dtvenda' => 'Data',
       'total' => 'Total',
       'situacao' => 'Situacao',
-      'id_aluno' => 'Aluno',
       'total' => 'Total',
     );
   }

@@ -40,11 +40,10 @@ function registrar_login(){
 }
 
 function registrar_cadastros(){
-  add_menu_page('KidsPay', 'Cadastros', 'read', 'kidspay-cad-tools', 'kidspay_default_cad_page_display', 'dashicons-food', 30);
+  add_menu_page('KidsPay', 'Cadastros', 'read', 'kidspay-cad-tools', 'kidspay_produtos_cad_page_display', 'dashicons-food', 30);
   //add_submenu_page('kidspay-cad-tools', 'Produtos', 'Produtos', 'manage_options', 'kidspay-cad-produtos', 'kidspay_produtos_cad_page_display');
   add_submenu_page('kidspay-cad-tools', 'Produtos', 'Produtos', 'read', 'kidspay-cad-produtos', 'kidspay_produtos_cad_page_display');
   add_submenu_page('kidspay-cad-tools', 'Alunos', 'Alunos', 'read', 'kidspay-cad-alunos', 'kidspay_alunos_cad_page_display');
-  add_submenu_page('kidspay-cad-tools', 'Clientes', 'Clientes', 'manage_options', 'kidspay-cad-clientes', 'kidspay_clientes_cad_page_display');
   add_submenu_page('kidspay-cad-tools', 'Restrições', 'Restrições', 'read', 'kidspay-cad-restricoes', 'kidspay_restricoes_cad_page_display');
 }
 
@@ -58,9 +57,8 @@ function registrar_relatorios(){
 }
 
 function registrar_creditos(){
-  add_menu_page('KidsPay', 'Créditos', 'read', 'kidspay-crd', 'kidspay_creditos_cmp_page_display', 'dashicons-media-text', 30);
-  add_submenu_page('kidspay-crd', 'Comprar', 'Comprar', 'read', 'kidspay-crd-comprar', 'kidspay_creditos_cmp_page_display');
-  add_submenu_page('kidspay-crd', 'Estornar', 'Estornar', 'read', 'kidspay-crd-estorno', 'kidspay_creditos_estorno_page_display');
+  add_menu_page('KidsPay', 'Créditos', 'read', 'kidspay-crd-comprar', 'kidspay_creditos_cmp_page_display', 'dashicons-cart', 30);
+  add_submenu_page('kidspay-crd-comprar', 'Estornar', 'Estornar', 'read', 'kidspay-crd-estorno', 'kidspay_creditos_estorno_page_display');
 }
 
 
