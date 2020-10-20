@@ -1,6 +1,78 @@
 <?php
+  function kp_aluno_menu_divtabs(){
+    ?>
+    <script>
+      window.onload = function(){document.getElementById("defaultOpen").click();}
+    </script>
+    <div class="tab">
+      <?php
+        $cliente = new KidsPayClientes();
+        $alunos = $cliente->get_alunos();
+        if(!count($alunos)){
+          $cliente->Print("Não há alunos cadastrados");
+        }
+        $cont=0;
+        foreach ($alunos as $key => $value) {
+          if(!$cont){
+            ?>
+            <button class="tablinks" id="defaultOpen" onclick="openDiv(event, '<?php echo "{$value['nome']}"?>')">
+              <?php echo "{$value['nome']}";?>
+            </button>
+            <?php
+          }else{
+            ?>
+            <button class="tablinks" onclick="openDiv(event, '<?php echo "{$value['nome']}";?>')" >
+              <?php echo "{$value['nome']}";?>
+            </button>
+            <?php
+          }
+          $cont++;
+        }
 
-  function kp_menu_tabs(){
+        ?>
+        <button class="tablinks" id="defaultOpen" onclick="openDiv(event, '<?php echo "Novo"?>')">
+          <?php echo "Novo";?>
+        </button>
+        <?php
+
+        foreach ($alunos as $key => $value) {
+          kp_aluno_tabs($value['id_aluno'], $value['nome']);
+        }
+        kp_aluno_tabs(99,'Novo','cad');
+      ?>
+    </div>
+    <?php
+  }
+
+  function kp_aluno_tabs($aluno='', $divname='', $action = ''){
+    ?>
+      <div id='<?php echo "{$divname}" ?>' class="tabcontent">
+        <form method='post' action='?page=kidspay-cad-alunos' ?>
+          <table class="form-table" >
+            <tr>
+              <th scope="row"><label>Nome</label></th>
+              <td><input type="text" name="nome" value="<?php if($divname!=='Novo') echo "{$divname}"; ?>"></td>
+            </tr>
+            <tr>
+              <td>
+                <input type='hidden' name='action' value='<?php echo "{$action}"; ?>'>
+                <input type='hidden' name='id' value='<?php echo "{$aluno}"; ?>'>
+
+                <input type='submit' value='Concluir' name="action" class='button button-primary'>
+                <?php
+                  if($divname!=='Novo')
+                  echo "<input type='submit' value='Deletar' name='action' class='button button-primary'>";
+                ?>
+
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    <?php
+  }
+
+  function kp_cred_menu_divtabs(){
     ?>
     <script>
       window.onload = function(){document.getElementById("defaultOpen").click();}
@@ -30,14 +102,14 @@
           $cont++;
         }
         foreach ($alunos as $key => $value) {
-          kp_credito_tabs($value['id_aluno'], $value['nome'] ,$value['credito'] - $value['gastos']);
+          kp_cred_tabs($value['id_aluno'], $value['nome'] ,$value['credito'] - $value['gastos']);
         }
       ?>
     </div>
     <?php
   }
 
-  function kp_credito_tabs($aluno, $divname, $valor_crd=0){
+  function kp_cred_tabs($aluno, $divname, $valor_crd=0){
     ?>
       <div id='<?php echo "$divname" ?>' class="tabcontent">
         <form method='post' action='?page=kidspay-crd-comprar'>
@@ -64,7 +136,7 @@
   function comprar_creditos_html(){
 
     $cliente = new KidsPayClientes();
-    $qnt = kp_menu_tabs();
+    $qnt = kp_cred_menu_divtabs();
 
   }
 
@@ -125,18 +197,9 @@
   }
 
   function cadastrar_alunos_html(){
-    ?>
-      <table class="form-table" >
-        <tr>
-          <th scope="row"><label>Nome</label></th>
-          <td><input type="text" name="nome"></td>
-        </tr>
-        <tr>
-          <th><input type='submit' value='Concluir' class='button button-primary'></th>
-          <td><input type='hidden' name='action' value='<?php if(isset($acao))echo "$acao"; else echo 'cad' ?>'>
-        </tr>
-      </table>
-    <?php
+
+    $qnt = kp_aluno_menu_divtabs();
+
   }
 
 ?>
