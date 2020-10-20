@@ -1,5 +1,7 @@
 <?php
+  $new_aluno_tab_name = _('Novo');
   function kp_aluno_menu_divtabs(){
+    global $new_aluno_tab_name;
     ?>
     <script>
       window.onload = function(){document.getElementById("defaultOpen").click();}
@@ -30,35 +32,35 @@
         }
 
         ?>
-        <button class="tablinks" id="defaultOpen" onclick="openDiv(event, '<?php echo "Novo"?>')">
-          <?php echo "Novo";?>
+        <button class="tablinks" id="defaultOpen" onclick="openDiv(event, '<?php echo $new_aluno_tab_name?>')">
+          <?php echo "{$new_aluno_tab_name}";?>
         </button>
         <?php
 
         foreach ($alunos as $key => $value) {
-          kp_aluno_tabs($value['id_aluno'], $value['nome']);
+          kp_aluno_tabs($value['id_aluno'], $value['nome'],'Atualizar');
         }
-        kp_aluno_tabs(99,'Novo','cad');
+        kp_aluno_tabs(99,'Novo','Cadastrar');
       ?>
     </div>
     <?php
   }
 
   function kp_aluno_tabs($aluno='', $divname='', $action = ''){
+    global $new_aluno_tab_name;
     ?>
       <div id='<?php echo "{$divname}" ?>' class="tabcontent">
         <form method='post' action='?page=kidspay-cad-alunos' ?>
           <table class="form-table" >
             <tr>
-              <th scope="row"><label>Nome</label></th>
-              <td><input type="text" name="nome" value="<?php if($divname!=='Novo') echo "{$divname}"; ?>"></td>
+              <th scope="row"><label><?php if($divname!==$new_aluno_tab_name) echo "Aluno"; else echo "Aluno " . $new_aluno_tab_name;?></label></th>
+              <td><input type="text" name="nome" value="<?php if($divname!==$new_aluno_tab_name) echo "{$divname}"; ?>"></td>
             </tr>
             <tr>
               <td>
-                <input type='hidden' name='action' value='<?php echo "{$action}"; ?>'>
                 <input type='hidden' name='id' value='<?php echo "{$aluno}"; ?>'>
 
-                <input type='submit' value='Concluir' name="action" class='button button-primary'>
+                <input type='submit' value='<?php echo $action ?>' name="action" class='button button-primary'>
                 <?php
                   if($divname!=='Novo')
                   echo "<input type='submit' value='Deletar' name='action' class='button button-primary'>";
@@ -174,23 +176,14 @@
         </tr>
         <tr>
           <th scope="row"><label for="situacao">Ativo?</label></th>
-          <td><input type="hidden" name="situacao" value='I'></td>
-          <td><input type="checkbox" name="situacao" value='
-            <?php
-              if(isset($_REQUEST['preco_venda'])){
-                echo $_REQUEST['situacao'];
-              }else{
-                echo 'A';
-              }
-                ?>
-                '></td>
+          <td><input type="checkbox" name="situacao" <?php if(isset($_REQUEST['situacao'])){ echo $_REQUEST['situacao']; }else{ echo 'A'; }?>></td>
         </tr>
         <tr>
           <th>
             <input type='submit' value='Concluir' class='button button-primary'>
           </th>
-          <td><input type='hidden' name='action' value='<?php if(isset($acao))echo "$acao"; else echo 'cad' ?>'>
-          <td><input type='hidden' name='id' value='<?php echo $_REQUEST['id_produto'] ?>'>
+          <td><input type='hidden' name='action' value='<?php if(isset($acao)) echo "$acao"; else echo 'cad'; ?>'>
+          <td><input type='hidden' name='id' value='<?php if(isset($_REQUEST['id_produto'])) echo $_REQUEST['id_produto']; ?>'>
         </tr>
       </table>
     <?php

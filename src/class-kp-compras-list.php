@@ -74,12 +74,23 @@ class KPComprasList extends WP_List_Table{
           return date("d/m/Y - H:i", $tempo);
         case 'total':
           return "R$ " . number_format(floatval($item[ $column_name ]),2);
+
         case 'situacao':
-          if($item[ $column_name ] === 'A'){
-            return 'Ativo';
-          }else{
-            return 'Inativo';
+          switch ($item[ $column_name ]) {
+            case 'A':
+              return "Ativo";
+              break;
+            case 'D':
+              return "Devolvido";
+              break;
+            case 'C':
+              return "Cancelado";
+
+            default:
+              return "Sem status";
+              break;
           }
+
         case 'id_venda':
         case 'total':
           return $item[ $column_name ];

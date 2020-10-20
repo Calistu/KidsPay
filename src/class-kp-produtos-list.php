@@ -75,19 +75,26 @@ class KPProdutosList extends WP_List_Table{
 
   public function column_default( $item, $column_name ){
     switch( $column_name ) {
-        case 'situacao':
-          if($item[ $column_name ] === 'A')
-            return 'Ativo';
+      case 'situacao':
+        if($item[ $column_name ] === 'A')
+          return 'Ativo';
+        else
+        if($item[ $column_name ] === 'I')
+          return 'Inativo';
+          
+      case 'preco_custo':
+        return "R$ " . number_format(floatval($item[ $column_name ]),2);
 
-        case 'id_produto':
-        case 'nome':
-        case 'descricao':
-        case 'preco_custo':
-        case 'preco_venda':
+      case 'preco_venda':
+        return "R$ " . number_format(floatval($item[ $column_name ]),2);
 
-          return $item[ $column_name ];
-        default:
-            return print_r( $item, true ) ;
+      case 'id_produto':
+      case 'nome':
+      case 'descricao':
+        return $item[ $column_name ];
+
+      default:
+          return print_r( $item, true ) ;
     }
   }
 

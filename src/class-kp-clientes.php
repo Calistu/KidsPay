@@ -25,7 +25,7 @@ class KidsPayClientes extends KidsPayForms{
 
   public function get_alunoid_pnome($var){
     global $wpdb;
-    $res = $wpdb->get_results($wpdb->prepare('SELECT a.id_aluno FROM alunos as a INNER JOIN clientes as c on a.id_cliente = c.id_cliente WHERE c.id_cliente = ' . get_current_user_id() . " and a.nome = '$var'"), ARRAY_A);
+    $res = $wpdb->get_results('SELECT a.id_aluno FROM alunos as a INNER JOIN clientes as c on a.id_cliente = c.id_cliente WHERE c.id_cliente = ' . get_current_user_id() . " and a.nome = '$var'", ARRAY_A);
 
     if($res and $res[0]['id_aluno']){
       return $res[0]['id_aluno'];

@@ -60,15 +60,26 @@ class KPCreditosList extends WP_List_Table{
 
       public function column_aluno_nome($item){
         $estorn_action = "<div class='row-actions'><span class='edit'><a href='?page=kidspay-crd-estorno&action=est&id={$item['id_credito_cliente']}'>Estornar</a></span></div>";
-        $ativa_action = "<div class='row-actions'><span class='edit'><a href='?page=kidspay-crd-estorno&action=ativ&id={$item['id_credito_cliente']}'>Reativar</a></span></div>";
+        $ativa_action =   "<div class='row-actions'><span class='edit'><a href='?page=kidspay-crd-estorno&action=ativ&id={$item['id_credito_cliente']}'>Reativar</a></span></div>";
+        $recarrega_action = "<div class='row-actions'><span class='edit'><a href='?page=kidspay-crd-estorno&action=ativ&id={$item['id_credito_cliente']}'>Recarregar</a></span></div>";
         $situacao = '';
-        if($item['situacao'] == 'A'){
-          $situacao = 'Ativo';
-           return "{$item['aluno_nome']}<br>{$estorn_action}</td>";
-        }else
-        if($item['situacao'] == 'I'){
-          $situacao = 'Inativo';
-          return  "{$item['aluno_nome']}<br>{$ativa_action}</td>";
+
+        switch ($item['situacao']) {
+          case 'A':
+            $situacao = 'Estornar';
+            return "{$item['aluno_nome']}<br>{$estorn_action}</td>";
+
+          case 'E':
+            $situacao = 'Recarregar';
+            return "{$item['aluno_nome']}<br>{$recarrega_action}</td>";
+
+          case 'I':
+            $situacao = 'Ativar';
+            return "{$item['aluno_nome']}<br>{$ativa_action}</td>";
+
+          default:
+            $situacao = 'Situação não identificada';
+            break;
         }
       }
 

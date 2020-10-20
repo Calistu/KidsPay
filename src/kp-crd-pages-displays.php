@@ -80,11 +80,11 @@ function kidspay_creditos_estorno_page_display(){
           }else{
             break;
           }
-
           $wpdb->update('credito_clientes',
-          array('situacao' => 'I'),
+          array('situacao' => 'E'),
           array('id_credito_cliente' => $id));
           break;
+          
         case 'ativ':
           if(isset($_REQUEST['id']))
             $id = $_REQUEST['id'];
