@@ -81,7 +81,7 @@ class KPProdutosList extends WP_List_Table{
         else
         if($item[ $column_name ] === 'I')
           return 'Inativo';
-          
+
       case 'preco_custo':
         return "R$ " . number_format(floatval($item[ $column_name ]),2);
 

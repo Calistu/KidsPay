@@ -83,8 +83,13 @@ function kidspay_creditos_estorno_page_display(){
           $wpdb->update('credito_clientes',
           array('situacao' => 'E'),
           array('id_credito_cliente' => $id));
+          $alunos = $cliente->get_alunos($aluno);
+
+          $wpdb->update('alunos',
+          array('saldo' => $alunos[0]['saldo']),
+          array('id_aluno' => $id));
           break;
-          
+
         case 'ativ':
           if(isset($_REQUEST['id']))
             $id = $_REQUEST['id'];

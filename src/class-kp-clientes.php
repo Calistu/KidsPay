@@ -10,14 +10,17 @@ class KidsPayClientes extends KidsPayForms{
   public function get_loginid(){
     global $wpdb;
     $res = $wpdb->get_results('SELECT id_cliente FROM clientes WHERE id_cliente = ' . get_current_user_id(),ARRAY_A);
-    return $res[0]['id_cliente'];
+    if($res)
+      return $res[0]['id_cliente'];
+    else
+      return null;
   }
 
   public function insert_loginid(){
     global $wpdb;
     $login_atual = get_userdata(get_current_user_id());
     $login_user = array(
-      'id_cliente' => $login_atual->id,
+      'id_cliente' => $login_atual->ID,
       'nome' => $login_atual->user_login
     );
     return $wpdb->insert('clientes',$login_user);

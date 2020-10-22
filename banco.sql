@@ -62,11 +62,21 @@ CREATE TABLE vendas (
 CREATE TABLE item_vendas (
     id_item_venda int NOT NULL AUTO_INCREMENT,
     dtpagamento datetime,
-    quantidade float(5,2),
-    preco_unit float(5,2),
+    quantidade float(8,2),
+    preco_unit float(8,2),
     id_venda int,
     id_produto int,
     PRIMARY KEY (id_item_venda),
     FOREIGN KEY (id_venda) REFERENCES vendas(id_venda),
     FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
+);
+
+CREATE TABLE promocao_diaria (
+  id_promocao int NOT NULL AUTO_INCREMENT,
+  semana ENUM('segunda',  'terca', 'quarta', 'quinta', 'sexta'),
+  id_produto int not null,
+  nome varchar(200) not null,
+  valor float(8,2) not null,
+  PRIMARY KEY (id_promocao),
+  FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
 );

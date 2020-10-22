@@ -41,13 +41,18 @@ function kidspay_produtos_cad_page_display(){
       $form = new KidsPayForms();
       switch ($acao) {
         case 'cad':
+          if(isset($_REQUEST['situacao'])){
+            $situacao = 'A';
+          }else{
+            $situacao = 'I';
+          }
           $form->Print("Cadastrando Novo");
           $res = $wpdb->insert('produtos',array(
             'nome' => $_REQUEST['nome'],
             'descricao' => $_REQUEST['descricao'],
             'preco_custo' => $_REQUEST['preco_custo'],
             'preco_venda' => $_REQUEST['preco_venda'],
-            'situacao' => $_REQUEST['situacao'],
+            'situacao' => $situacao,
             )
           );
           if( !$res ){

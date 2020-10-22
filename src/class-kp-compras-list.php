@@ -58,7 +58,6 @@ class KPComprasList extends WP_List_Table{
     $cliente = new KidsPayClientes();
     $dataatual = date('Y-m-d H:i:s');
     $data = $wpdb->get_results("SELECT * FROM vendas WHERE id_cliente = {$cliente->get_loginid()}" , ARRAY_A);
-    //echo $wpdb->prepare("SELECT * FROM vendas WHERE id_cliente = {$cliente->get_loginid()}");
     return $data;
   }
 
