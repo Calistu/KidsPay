@@ -112,8 +112,8 @@ class KPCreditosList extends WP_List_Table{
         }
       }
 
-      private function sort_data( $a, $b ){
-        $orderby = 'dtpagamento';
+      private function sort_aluno_nome( $a, $b ){
+        $orderby = 'aluno_nome';
         $order = 'asc';
 
         if(!empty($_GET['orderby'])){

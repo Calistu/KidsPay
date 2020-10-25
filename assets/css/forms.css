@@ -8,7 +8,7 @@
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
-  background-color: inherit;
+  background-color: 'white';
   float: left;
   border: none;
   outline: none;
@@ -22,9 +22,6 @@
   background-color: #ddd;
 }
 
-.tab active button {
-  background-color: #ddd;
-}
 
 /* Style the tab content */
 .tabcontent {

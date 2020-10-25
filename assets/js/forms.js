@@ -1,3 +1,16 @@
+function carrega_div(id ){
+  button = document.getElementById(id);
+  if(button){
+    button.click();
+  }else{
+    console.log('abrindo div padrao');
+    button = document.getElementById('defaultOpen');
+    if(button){
+      button.click();
+    }
+  }
+}
+
 function openDiv(evt, divName) {
   // Declare all variables
   var i, tabcontent, tablinks;
@@ -14,8 +27,17 @@ function openDiv(evt, divName) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
 
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+    tablinks[i].style.backgroundColor = '';
+
+  }
+
   // Show the current tab, and add an "active" class to the button that opened the tab
   document.getElementById(divName).style.display = "block";
+
+  evt.currentTarget.style.backgroundColor = '#ddd';
   evt.currentTarget.className += " active";
 }
 

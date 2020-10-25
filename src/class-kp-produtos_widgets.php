@@ -14,16 +14,17 @@ class ProdutosWidgets extends WP_Widget {
     global $wpdb;
 
     if(isset($instance['tipo_lista']))
-      $tipo = apply_filters('widget_title', $instance['tipo_lista']);
+      $tipo_lista = apply_filters('widget_title', $instance['tipo_lista']);
 
     if(isset($instance['qnt_itens']))
-      $qnt_itens = $instance['qnt_itens'];
+      $qnt_itens = apply_filters('widget_title', $instance['qnt_itens']);
 
-    echo $args['before_widget'];
+    if(isset($instance['imagem_obgtr']))
+      $imagem_obgtr = apply_filters('widget_title', $instance['imagem_obgtr']);
 
     $label = '';
     $query = '';
-    if ( ! empty( $tipo ) ){
+    if ( ! empty( $tipo_lista ) ){
       switch ($instance['tipo_lista']) {
 
         case 'mais_vendas':
@@ -35,7 +36,7 @@ class ProdutosWidgets extends WP_Widget {
           $query = "select p.*,s.* from produtos as p inner join promocao_diaria as s on s.id_produto = p.id_produto;";
           break;
         case 'ativos':
-          $label = "Nossos Produtos";
+          $label = "<h3>Nossos Produtos</h3>";
           $query = "select * from produtos where situacao = 'A';";
           break;
       }
@@ -47,6 +48,11 @@ class ProdutosWidgets extends WP_Widget {
       echo "<div class='prod-list'>";
       $prod_qnt=0;
       foreach ($res as $key => $value) {
+        if($instance['imagem_obgtr']){
+          if(!$value['image_path'] or !strlen($value['image_path'])){
+            continue;
+          }
+        }
         ?>
           <div class='prod-box'>
             <table class='prod-table'>
@@ -61,18 +67,15 @@ class ProdutosWidgets extends WP_Widget {
               ?>
               <tr class='prod-columns'>
                 <th class='prod-columns'>
-                  <img class='prod-image' src='https://www.receitasetemperos.com.br/wp-content/uploads/2019/02/Imagem-1copy.jpg'>
+                  <img class='prod-image' src='<?php if(isset($value['image_path'])) echo $value['image_path']; else echo 'noimage' ?>'>
                 </th>
 
               </tr>
               <tr>
                 <td class='prod-columns'>
-                  <a href='/wp-admin/admin.php?page=kidspay-crd-comprar'><Label class='prod-title'><?php echo $value['nome']?></Label></a>
-                  <div class="kp-widget-item-action">
-                    <span class="edit">
-                      <a href="/wp-admin/admin.php?page=kidspay-cad-produtos&action=alt&id=<?php if(isset($value['id_produto'])) echo $value['id_produto']; else echo '0'?>">Editar</a>
-                    </span>
-                  </div>
+                  <a href='/wp-admin/admin.php?page=kidspay-crd-comprar'><Label class='prod-title'><?php echo ucfirst($value['nome'])?></Label></a>
+                  <?php add_thickbox(); ?>
+                  <a style='color:red;' class="thickbox" href="/wp-admin/admin.php?page=kidspay-cad-produtos&action=alt&id=<?php if(isset($value['id_produto'])) echo $value['id_produto']; else echo '0'?>TB_iframe=true&width=800&height=500">Editar</a>
                   <div><Label><?php echo $value['descricao']?></Label></div>
                   <?php
                     if($instance['tipo_lista'] == 'promocao'){
@@ -96,16 +99,32 @@ class ProdutosWidgets extends WP_Widget {
         }
       }
       echo "</div>";
+    }else{
+      switch ($instance['tipo_lista']) {
+
+        case 'mais_vendas':
+          if(current_user_can('manage_options')){
+            echo 'Ainda não há produtos vendidos';
+          }
+          break;
+
+        case 'promocao':
+          if(current_user_can('manage_options')){
+            echo 'Sem promoção diária cadastrada';
+          }
+          break;
+
+        case 'ativos':
+          echo "Sem produtos no momento";
+          break;
+      }
     }
 	}
 
 	public function form( $instance ) {
-    if ( isset( $instance[ 'tipo_lista' ] ) )
-      $title = $instance[ 'tipo_lista' ];
-    else
-      $tipo = __( 'Escolher Tipo', 'kidspay' );
     ?>
-    <table>
+
+    <table class="form-table">
       <tr>
         <Label>Listar Produtos por:</Label>
       </tr>
@@ -133,11 +152,25 @@ class ProdutosWidgets extends WP_Widget {
         <option <?php echo $ativos_checked?> value='ativos'>Produtos Ativos</option>
       </select>
       </tr>
+
       <tr>
-        <Label>Quantidade de itens:</Label>
+        <td>
+        <Label>Quantidade máxima de itens:</Label>
+        <input type="number" id="<?php echo $this->get_field_id( 'qnt_itens' ); ?>" name="<?php echo $this->get_field_name( 'qnt_itens' ); ?>"  value="<?php echo $instance['qnt_itens']; ?>">
       </tr>
       <tr>
-        <input type="number" id="<?php echo $this->get_field_id( 'qnt_itens' ); ?>" name="<?php echo $this->get_field_name( 'qnt_itens' ); ?>"  value="<?php echo $instance['qnt_itens']; ?>">
+        <Label for="imagem_obgtr">Postar apenas produtos com imagem: </Label>
+        <input
+        id="<?php echo $this->get_field_id( 'imagem_obgtr' );?>"
+        name="<?php echo $this->get_field_name( 'imagem_obgtr' );?>"
+        type='checkbox'
+          <?php
+          if(isset($instance['imagem_obgtr'])){
+            if($instance['imagem_obgtr'])
+              echo 'checked';
+          }
+          ?>>
+
       </tr>
 
     <?php
@@ -145,6 +178,7 @@ class ProdutosWidgets extends WP_Widget {
 
 	public function update( $new_instance, $old_instance ) {
     $instance = array();
+    $instance['imagem_obgtr'] = ( ! empty( $new_instance['imagem_obgtr'] ) ) ? strip_tags( $new_instance['imagem_obgtr'] ) : '';
     $instance['tipo_lista'] = ( ! empty( $new_instance['tipo_lista'] ) ) ? strip_tags( $new_instance['tipo_lista'] ) : '';
     $instance['qnt_itens'] = ( ! empty( $new_instance['qnt_itens'] ) ) ? strip_tags( $new_instance['qnt_itens'] ) : '';
 

@@ -42,10 +42,25 @@ function kidspay_creditos_cmp_page_display(){
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Recarregar Créditos</h1>
     <hr class='wp-head-end'>
-
     <?php
       comprar_creditos_html();
     ?>
+    <script>
+    <?php
+      if(isset($_REQUEST['aluno'])){
+        $res = $wpdb->get_results("select nome from alunos where id_aluno = {$_REQUEST['aluno']}",ARRAY_A);
+        if($res){
+          ?>
+          carrega_div('<?php echo "{$res[0]['nome']}" . "-button"; ?>');
+          <?php
+        }
+      }else{
+        ?>
+        carrega_div('defaultOpen');
+      <?php
+      }
+      ?>
+    </script>
   <?php
 }
 

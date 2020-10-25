@@ -6,6 +6,16 @@ if(!class_exists('WP_List_Table')){
 }
 
 class KPProdutosList extends WP_List_Table{
+
+  function __construct(){
+    //Set parent defaults
+    parent::__construct( array(
+      'singular'  => 'produto',     //singular name of the listed records
+      'plural'    => 'produtos',    //plural name of the listed records
+      'ajax'      => false        //does this table support ajax?
+    ) );
+  }
+
   public function prepare_items(){
 
     $columns = $this->get_columns();
@@ -27,23 +37,36 @@ class KPProdutosList extends WP_List_Table{
     $data = array_slice($data,(($currentPage-1)*$perPage),$perPage);
     $this->_column_headers = array($columns, $hidden, $sortable);
     $this->items = $data;
+    $this->process_bulk_action();
   }
 
   public function get_columns(){
     return array(
+      'cb' => '<input type="checkbox" />',
       'id_produto' => 'Id',
-      'nome' => 'Nome',
-      'descricao' => 'Descrição Produto',
+      'nome' => __('Name'),
+      'descricao' => __('Description'),
       'preco_custo' => 'Preço de Custo',
       'preco_venda' => 'Preço de Venda',
+      'image_path' => __('Image'),
       'situacao' => 'Situação'
     );
   }
 
+  public function column_image_path($item){
+    if($item['image_path']){
+      $imagem = "<img style='width:20px;' src='{$item['image_path']}'>";
+      return "<div>{$imagem}</div>";
+    }
+    else{
+      return "Sem imagem";
+    }
+  }
+
   public function column_nome($item){
     $actions = array(
-      'edit' => sprintf("<a href='?page=kidspay-cad-produtos&action=alt&id=%s'>%s</a> ", $item['id_produto'], __('Editar', 'kidspay')),
-      'delete' => sprintf("<a href='?page=kidspay-rel-produtos&action=del&id=%s'>%s</a> ", $item['id_produto'], __('Deletar', 'kidspay')),
+      'edit' => sprintf("<a href='?page=kidspay-cad-produtos&action=alt&id=%s'>%s</a> ", $item['id_produto'], __( 'Change' )),
+      'delete' => sprintf("<a href='?page=kidspay-rel-produtos&action=del&id=%s'>%s</a> ", $item['id_produto'], __('Delete')),
     );
 
     return sprintf('%s %s',
@@ -72,9 +95,16 @@ class KPProdutosList extends WP_List_Table{
     return $data;
   }
 
+  function column_cb($item){
+        return sprintf(
+            '<input type="checkbox" name="ID[]" value="%s" />', $item['id_produto']
+        );
+    }
+
 
   public function column_default( $item, $column_name ){
     switch( $column_name ) {
+
       case 'situacao':
         if($item[ $column_name ] === 'A')
           return 'Ativo';
@@ -98,8 +128,40 @@ class KPProdutosList extends WP_List_Table{
     }
   }
 
-  private function sort_data( $a, $b ){
-    // Set defaults
+  function extra_tablenav( $which ) {
+    ?>
+
+    <?php
+  }
+
+  function get_bulk_actions(){
+    $actions = array(
+      'delete' => __( 'Delete' )
+    );
+    return $actions;
+  }
+
+  function process_bulk_action() {
+    global $wpdb;
+    //Detect when a bulk action is being triggered...
+    if( 'delete' === $this->current_action() ) {
+      $form = new KidsPayForms();
+      foreach ($_GET as $key => $value) {
+        // code...
+        if($key === 'ID'){
+          foreach ($value as $key2 => $value2) {
+            if(!$wpdb->delete('produtos', array('id_produto' => $value2))){
+              $form->Print("Produto {$value2} não deletado");
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  function sort_data( $a, $b ){
+    // Set defaults/
     $orderby = 'id_produto';
     $order = 'asc';
 

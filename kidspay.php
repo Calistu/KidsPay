@@ -5,7 +5,8 @@
  * Version: 1.0
  * License: GPLv2 or Later.
 */
-define ('KPPATH','/wp-content/plugins/kidspay');
+define ('KPPATH','/wp-content/plugins/KidsPay');
+define ('KP_DIR', __DIR__ );
 define ('KP_VENDOR_DIR', __DIR__ . '/vendor/');
 
 if ( ! defined( 'KP_PLUGIN_FILE' ) ) {

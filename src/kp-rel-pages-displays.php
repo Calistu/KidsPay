@@ -61,7 +61,7 @@ function kidspay_produtos_rel_page_display(){
   ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Produtos</h1>
-    <hr class='wp-head-end'>
+    <hr class='wp-head-end' id='prod-list'>
     <?php
     $acao = '';
     global $wpdb;
@@ -82,18 +82,23 @@ function kidspay_produtos_rel_page_display(){
     }
     $produtos = new KPProdutosList();
     $produtos->prepare_items();
+    ?>
+    <form id='events-filter' method='get'>
+    <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+    <?php
     $produtos->display();
+    echo "</form>";
     ?>
   </div>
   <?php
 }
 
 function kidspay_creditos_rel_page_display(){
-  echo "
+  ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Créditos</h1>
     <hr class='wp-head-end'>
 
   </div>
-  ";
+  <?php
 }

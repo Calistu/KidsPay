@@ -15,6 +15,7 @@ CREATE TABLE clientes (
 CREATE TABLE produtos (
     id_produto int NOT NULL AUTO_INCREMENT,
     nome varchar(100),
+    image_path varchar(255),
     descricao varchar(200),
 	  preco_custo float(5,2),
     preco_venda float(5,2),
