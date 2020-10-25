@@ -6,6 +6,7 @@ Um pequeno sistema para gestão de créditos em cantinas de cantinas de escolas.
 ### Dependencias
 
   Ultimo Teste em: WordPress 5.5 25/10/2020
+  
   WP-CanvasJS - Já incluso em vendor
 
 ## Contribuindo
@@ -31,7 +32,7 @@ Produtos por promoções semanais
 
 Recarregamento de créditos pelo site
 
-![Relatórios](assets/imgs/screenshots/relat_mensal.png)
+![Relatórios](assets/imgs/screenshots/creditos.png)
 
 
 # Relatórios Compras e Vendas
