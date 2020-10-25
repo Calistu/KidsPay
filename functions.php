@@ -10,6 +10,9 @@ function kp_admin_registrar_assets(){
   wp_register_script( 'scripts_forms', plugins_url( '/assets/js/forms.js' , __FILE__ ) );
   wp_enqueue_script( 'scripts_forms', plugins_url( '/assets/js/forms.js' , __FILE__ )  );
 
+  wp_register_script( 'scripts_graficos', plugins_url( '/assets/js/graficos.js' , __FILE__ ) );
+  wp_enqueue_script( 'scripts_graficos', plugins_url( '/assets/js/graficos.js' , __FILE__ )  );
+
 }
 
 function kp_registrar_assets(){

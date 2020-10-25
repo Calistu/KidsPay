@@ -21,6 +21,7 @@ function kidspay_compras_rel_page_display(){
     <h1 class='wp-heading-inline'>Compras</h1>
     <hr class='wp-head-end'>
     <?php
+    mostrar_grafico_vendas();
     $compras = new KPComprasList();
     $compras->prepare_items();
     $compras->display();

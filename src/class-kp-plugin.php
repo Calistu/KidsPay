@@ -21,12 +21,12 @@ Class KidsPayPlugin{
   }
 
   public static function desativar(){
-    $desativacao = new KidsPayDesinstalacao();
+    //$desativacao = new KidsPayDesinstalacao();
     //...
   }
 
   public static function desinstalar(){
-    $desinstalacao = new KidsPayDesinstalacao();
+    //$desinstalacao = new KidsPayDesinstalacao();
     //...
   }
 }

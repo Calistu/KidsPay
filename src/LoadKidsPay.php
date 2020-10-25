@@ -29,4 +29,6 @@ require_once __DIR__ . '/class-kp-produtos_widgets.php';
 
 require_once __DIR__ . '/class-kp-creditos-list.php';
 
+require_once __DIR__ . '/kp-graphs-sources.php';
+
 require_once __DIR__ . '/class-kp-plugin.php';

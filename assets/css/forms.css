@@ -40,3 +40,9 @@
   from {opacity: 0;}
   to {opacity: 1;}
 }
+
+#chartContainer{
+  border: doted 1px black;
+  height: 370px;
+  width: 100%;"
+}
