@@ -22,7 +22,6 @@
   background-color: #ddd;
 }
 
-
 /* Style the tab content */
 .tabcontent {
   display: none;
@@ -35,6 +34,9 @@
   animation: fadeEffect 1s; /* Fading effect takes 1 second */
 }
 
+.tab-novo{
+  border: 1px solid #ccc;
+}
 /* Go from zero to full opacity */
 @keyframes fadeEffect {
   from {opacity: 0;}
@@ -45,4 +47,15 @@
   border: doted 1px black;
   height: 370px;
   width: 100%;"
+}
+.promocao-container{
+  margin-bottom: 20%;
+  display: grid;
+  border-style:hidden;
+}
+
+.promocao-inputs{
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  padding: 10px;
 }

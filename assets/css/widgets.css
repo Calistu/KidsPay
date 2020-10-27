@@ -20,17 +20,19 @@
   border: hidden;
 }
 
-.prod-image:empty {
+.weekname{
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.prod-image:empty{
   border-radius: 20px;
-  max-height: 150px;
-  max-width: 150px;
+  height:80px;
 }
 
 .prod-image:hover {
   position: relative;
   border-radius: 30px;
-  max-height: 160px;
-  max-width: 160px;
   animation: fadeEffect 3s;
 }
 
@@ -58,4 +60,12 @@
   webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
+}
+
+
+.message{
+  color: green;
+  font-weight: bold;
+  font-size: 20px;
+  padding-bottom: 10%;
 }

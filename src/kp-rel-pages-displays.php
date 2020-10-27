@@ -50,6 +50,7 @@ function kidspay_clientes_rel_page_display(){
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Clientes</h1>
     <hr class='wp-head-end'>";
+    mostrar_grafico_clientes();
     $compras = new KPClientesList();
     $compras->prepare_items();
     $compras->display();
@@ -64,6 +65,7 @@ function kidspay_produtos_rel_page_display(){
     <h1 class='wp-heading-inline'>Produtos</h1>
     <hr class='wp-head-end' id='prod-list'>
     <?php
+    mostrar_grafico_produtos();
     $acao = '';
     global $wpdb;
     if(isset($_REQUEST['action']))
@@ -72,6 +74,17 @@ function kidspay_produtos_rel_page_display(){
     switch ($acao) {
       case 'del':
         $id = $_REQUEST['id'];
+        $exists = $wpdb->get_results("SELECT * FROM promocao_diaria WHERE id_produto = {$id} LIMIT 1");
+        if($exists){
+          $form->PrintErro("Produto postado para promoção, retire!");
+          break;
+        }
+        $exists = $wpdb->get_results("SELECT * FROM item_vendas WHERE id_produto = {$id} LIMIT 1");
+        if($exists){
+          $form->PrintErro("Produto já usado para vendas, aconselhado inativar!");
+          break;
+        }
+
         if(($wpdb->delete('produtos', array(
           'id_produto' => $id)
         ))){

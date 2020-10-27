@@ -16,5 +16,4 @@ if ( ! defined( 'KP_PLUGIN_FILE' ) ) {
 require __DIR__ . '/functions.php';
 require __DIR__ . '/src/kp-vars.php';
 require __DIR__ . '/src/class-kp-plugin.php';
-require __DIR__ . '/src/class-kp-tools.php';
 require KP_VENDOR_DIR . 'autoload.php';

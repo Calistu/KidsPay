@@ -1,15 +1,36 @@
 <?php
 
-class ProdutosWidgets extends WP_Widget {
+class KidsPayProdutosWidget extends WP_Widget {
 
   function __construct(){
     parent::__construct(
       'KidsPay',
-      'Listar Produtos KidsPay',
+      'KidsPay Produtos',
     );
 
   }
 
+  public function sem_itens($instance){
+    ?><div class='message'><?php
+    switch ($instance['tipo_lista']) {
+      case 'mais_vendas':
+        if(current_user_can('manage_options')){
+          echo 'Ainda não há produtos vendidos';
+        }
+        break;
+
+      case 'promocao':
+        if(current_user_can('manage_options')){
+          echo 'Nos desculpe! Estamos sem promoções no momento';
+        }
+        break;
+
+      case 'ativos':
+        echo "Sem produtos no momento";
+        break;
+    }
+    ?></div><?php
+  }
 	public function widget( $args, $instance ) {
     global $wpdb;
 
@@ -49,7 +70,7 @@ class ProdutosWidgets extends WP_Widget {
       $prod_qnt=0;
       foreach ($res as $key => $value) {
         if($instance['imagem_obgtr']){
-          if(!$value['image_path'] or !strlen($value['image_path'])){
+          if(!$value['image_path'] or !strlen($value['image_path'] or !fopen('image_path','r'))){
             continue;
           }
         }
@@ -60,7 +81,7 @@ class ProdutosWidgets extends WP_Widget {
               if($instance['tipo_lista'] == 'promocao'){
                 echo "<tr class='prod-columns'>";
                 echo "<th class='prod-columns'>";
-                echo "<Label>{$value['semana']}</Label>";
+                echo "<Label class='weekname'>". ucfirst($value['semana']) ."</Label>";
                 echo "</th>";
                 echo "</tr>";
               }
@@ -74,8 +95,10 @@ class ProdutosWidgets extends WP_Widget {
               <tr>
                 <td class='prod-columns'>
                   <a href='/wp-admin/admin.php?page=kidspay-crd-comprar'><Label class='prod-title'><?php echo ucfirst($value['nome'])?></Label></a>
-                  <?php add_thickbox(); ?>
-                  <a style='color:red;' class="thickbox" href="/wp-admin/admin.php?page=kidspay-cad-produtos&action=alt&id=<?php if(isset($value['id_produto'])) echo $value['id_produto']; else echo '0'?>TB_iframe=true&width=800&height=500">Editar</a>
+                  <?php if(current_user_can('manage_options')){ ?>
+                    <?php add_thickbox(); ?>
+                    <a style='color:red;' class="thickbox" href="/wp-admin/admin.php?page=kidspay-cad-produtos&action=alt&id=<?php if(isset($value['id_produto'])) echo $value['id_produto']; else echo '0'?>TB_iframe=true&width=800&height=500">Editar</a>
+                  <?php } ?>
                   <div><Label><?php echo $value['descricao']?></Label></div>
                   <?php
                     if($instance['tipo_lista'] == 'promocao'){
@@ -99,27 +122,12 @@ class ProdutosWidgets extends WP_Widget {
         }
       }
       echo "</div>";
-    }else{
-      switch ($instance['tipo_lista']) {
-
-        case 'mais_vendas':
-          if(current_user_can('manage_options')){
-            echo 'Ainda não há produtos vendidos';
-          }
-          break;
-
-        case 'promocao':
-          if(current_user_can('manage_options')){
-            echo 'Sem promoção diária cadastrada';
-          }
-          break;
-
-        case 'ativos':
-          echo "Sem produtos no momento";
-          break;
-      }
+    }
+    if(!$prod_qnt){
+      $this->sem_itens($instance);
     }
 	}
+
 
 	public function form( $instance ) {
     ?>
@@ -187,4 +195,4 @@ class ProdutosWidgets extends WP_Widget {
 	}
 }
 
-add_action('widgets_init',function(){register_widget('ProdutosWidgets');});
+add_action('widgets_init',function(){register_widget('KidsPayProdutosWidget');});

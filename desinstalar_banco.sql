@@ -1,3 +1,4 @@
+DROP TABLE promocao_diaria;
 DROP TABLE item_vendas;
 DROP TABLE vendas;
 DROP TABLE credito_clientes;

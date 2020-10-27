@@ -31,13 +31,17 @@ function openDiv(evt, divName) {
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
     tablinks[i].style.backgroundColor = '';
+    tablinks[i].style.bordeRadius = '';
+    tablinks[i].style.color = 'black';
 
   }
 
   // Show the current tab, and add an "active" class to the button that opened the tab
   document.getElementById(divName).style.display = "block";
 
-  evt.currentTarget.style.backgroundColor = '#ddd';
+  evt.currentTarget.style.backgroundColor = '#007cba';
+  evt.currentTarget.style.color = 'white';
+  evt.currentTarget.style.bordeRadius = '200px';
   evt.currentTarget.className += " active";
 }
 

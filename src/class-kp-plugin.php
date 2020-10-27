@@ -41,9 +41,11 @@ function registrar_login(){
 
 function registrar_cadastros(){
   add_menu_page('KidsPay', 'Cadastros', 'read', 'kidspay-cad-tools', 'kidspay_produtos_cad_page_display', 'dashicons-food', 30);
-  add_submenu_page('kidspay-cad-tools', 'Produtos', 'Produtos', 'manage_options', 'kidspay-cad-produtos', 'kidspay_produtos_cad_page_display');
+  add_submenu_page('kidspay-cad-tools', 'Produtos', 'Produtos', 'read', 'kidspay-cad-produtos', 'kidspay_produtos_cad_page_display');
   add_submenu_page('kidspay-cad-tools', 'Alunos', 'Alunos', 'read', 'kidspay-cad-alunos', 'kidspay_alunos_cad_page_display');
   add_submenu_page('kidspay-cad-tools', 'Restrições', 'Restrições', 'read', 'kidspay-cad-restricoes', 'kidspay_restricoes_cad_page_display');
+  add_submenu_page('kidspay-cad-tools', 'Promoções', 'Promoções', 'manage_options', 'kidspay-cad-prodsem', 'kidspay_prod_semanal_cad_page_display');
+
 }
 
 function registrar_relatorios(){

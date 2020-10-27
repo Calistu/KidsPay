@@ -6,13 +6,25 @@ function kidspay_default_cad_page_display(){
     <h1 class='wp-heading-inline'>Cadastros</h1>
     <hr class='wp-head-end'>
   </div>
+
+  <?php
+}
+
+function kidspay_prod_semanal_cad_page_display(){
+  ?>
+  <div class='wrap'>
+    <h1 class='wp-heading-inline'>Promoção Semanal</h1>
+    <hr class='wp-head-end'>
+    <?php
+    $produtos = new KidsPayProdutos();
+    $produtos->prod_semana_html_form();
+    ?>
+  </div>
+
   <?php
 }
 
 function kidspay_restricoes_cad_page_display(){
-  if ( ! class_exists( 'WP_List_Table' ) ) {
-	   require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-  }
   ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Restrições</h1>
@@ -171,7 +183,8 @@ function kidspay_produtos_cad_page_display(){
           $acao = 'cad';
           $form->Print("Cadastrando Novo");
       }
-      cadastrar_produtos_html($acao);
+      $produtos = new KidsPayProdutos();
+      $produtos->cadastrar_produtos_html($acao);
     ?>
     </form>
   </div>
@@ -186,8 +199,7 @@ function kidspay_clientes_cad_page_display(){
   <?php
   /*-------------------------------------------------------------------*/
     $cliente = new KidsPayClientes();
-
-    cadastrar_cliente_html();
+    $cliente->cadastrar_cliente_html();
   /*-------------------------------------------------------------------*/
   ?>
   </div>
@@ -258,32 +270,33 @@ function kidspay_alunos_cad_page_display(){
           $id = $_REQUEST['id'];
           $cliente = new KidsPayClientes();
           $res = $wpdb->get_results("select * from alunos where id_cliente = " . get_current_user_id() ." and nome = '{$_REQUEST['nome']}'", ARRAY_A);
-          if($res){
-            if($res[0]['nome'] !==  $_REQUEST['nome']){
-              $res = $wpdb->update('alunos',
-              array(
-                'nome' => $_REQUEST['nome'],
-                'id_cliente' => $cliente->get_loginid()
-              ),
-              array(
-                'id_aluno' => $id
-              )
-              );
-              if( !$res ){
-                if($wpdb->print_error()){
-                  $form->PrintErro($wpdb->print_error());
-                }
-                $form->Print('Aluno não foi atualizado!');
-              }else{
-                $form = new KidsPayForms();
-                $form->PrintOk('Atualizado com Sucesso!');
+          if(!$res){
+            $res = $wpdb->update('alunos',
+            array(
+              'nome' => $_REQUEST['nome'],
+              'id_cliente' => $cliente->get_loginid()
+            ),
+            array(
+              'id_aluno' => $id
+            )
+            );
+            if( !$res ){
+              if($wpdb->print_error()){
+                $form->PrintErro($wpdb->print_error());
               }
+              $form->Print('Aluno não foi atualizado!');
             }else{
-              $form->Print('Aluno não teve atualização!');
+              $form = new KidsPayForms();
+              $form->PrintOk('Atualizado com Sucesso!');
             }
+          }else{
+            $form->Print('Aluno não teve atualização!');
           }
+        }else{
+          $form->Print('Aluno já existe!');
         }
       }
+
       break;
     case 'Deletar':
       if(isset($_REQUEST['id'])){
@@ -316,7 +329,8 @@ function kidspay_alunos_cad_page_display(){
       break;
   }
   /*-------------------------------------------------------------------*/
-  cadastrar_alunos_html();
+  $cliente = new KidsPayClientes();
+  $cliente->cadastrar_alunos_html();
   /*-------------------------------------------------------------------*/
   ?>
   <script>

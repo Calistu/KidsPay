@@ -4,6 +4,7 @@ class KidsPayClientes extends KidsPayForms{
 
   function __construct(){
     $this->table = 'clientes';
+    $this->new_aluno_tab_name= _('Cadastrar Novo');
   }
   public $alunos;
 
@@ -110,4 +111,83 @@ class KidsPayClientes extends KidsPayForms{
 
     return $res;
   }
+
+  public $new_aluno_tab_name;
+  public function kp_aluno_menu_divtabs(){
+
+    ?>
+    <div class="tab">
+      <?php
+        $cliente = new KidsPayClientes();
+        $alunos = $cliente->get_alunos();
+        if(!count($alunos)){
+          $cliente->Print("Não há alunos cadastrados");
+        }
+        $cont=0;
+        foreach ($alunos as $key => $value) {
+          if(!$cont){
+            ?>
+            <button class="tablinks" id="defaultOpen" onclick="openDiv(event, '<?php echo "{$value['nome']}"?>')">
+              <?php echo "{$value['nome']}";?>
+            </button>
+            <?php
+          }else{
+            ?>
+            <button class="tablinks" id="<?php echo "{$value['nome']}-button";?>" onclick="openDiv(event, '<?php echo "{$value['nome']}";?>')" >
+              <?php echo "{$value['nome']}";?>
+            </button>
+            <?php
+          }
+          $cont++;
+        }
+
+        ?>
+        <button class="tablinks" onclick="openDiv(event, '<?php echo $this->new_aluno_tab_name?>')">
+          <?php echo "{$this->new_aluno_tab_name}";?>
+        </button>
+        <?php
+
+        foreach ($alunos as $key => $value) {
+          $this->kp_aluno_tabs($value['id_aluno'], $value['nome'],'Atualizar');
+        }
+        $this->kp_aluno_tabs(99,$this->new_aluno_tab_name,'Cadastrar');
+      ?>
+    </div>
+    <?php
+  }
+
+  public function kp_aluno_tabs($aluno='', $divname='', $action = ''){
+
+    ?>
+      <div id='<?php echo "{$divname}" ?>' class="tabcontent">
+        <form method='post' action='?page=kidspay-cad-alunos' ?>
+          <table class="form-table" >
+            <tr>
+              <th scope="row"><label><?php if($divname!==$this->new_aluno_tab_name) echo "Aluno"; else echo $this->new_aluno_tab_name . " Aluno";?></label></th>
+              <td><input type="text" name="nome" value="<?php if($divname!==$this->new_aluno_tab_name) echo "{$divname}"; ?>"></td>
+            </tr>
+            <tr>
+              <td>
+                <input type='hidden' name='id' value='<?php echo "{$aluno}"; ?>'>
+
+                <input type='submit' value='<?php echo $action ?>' name="action" class='button button-primary'>
+                <?php
+                  if($divname!=='Novo')
+                  echo "<input type='submit' value='Deletar' name='action' class='button button-primary'>";
+                ?>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    <?php
+  }
+
+
+  public function cadastrar_alunos_html(){
+
+    $qnt = $this->kp_aluno_menu_divtabs();
+
+  }
+
 }
