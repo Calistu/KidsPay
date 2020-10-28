@@ -100,12 +100,10 @@ class KidsPayProdutos extends KidsPayForms{
                   $selected = '';
                   if(isset($_REQUEST['produto-' . $value])){
                     $selected = $_REQUEST['produto-' . $value];
-                    echo $_REQUEST['produto-' . $value] . "<br>";
                   }
                   echo "<option value='nenhum'>Nenhum</option>";
 
                   foreach ($produtos as $key => $value2){
-                    echo $selected . ':' . $value2['id_produto'] . "<br>";
                     if($selected == $value2['id_produto']){
                       $flag = 'selected';
                     }else{
@@ -131,64 +129,75 @@ class KidsPayProdutos extends KidsPayForms{
     <?php
   }
 
-
-    function cadastrar_produtos_html($acao){
-      add_thickbox();
-      ?>
-        <table class="form-table" enctype="multipart/form-data">
-          <tr>
-            <th scope="row"><label>Nome *</label></th>
-            <td><input type="text" name="nome" value="<?php if(isset($_REQUEST['nome'])) echo $_REQUEST['nome']; ?>"></td>
-          </tr>
-          <tr>
-            <th scope="row"><label>Descrição</label></th>
-            <td><textarea  name="descricao"><?php if(isset($_REQUEST['descricao'])) echo $_REQUEST['descricao'];?></textarea></td>
-          </tr>
-          <tr>
-            <th scope="row"><label>Preço Custo</label></th>
-            <td><input type="number" step="0.01" name="preco_custo" value="<?php if(isset($_REQUEST['preco_custo'])) echo $_REQUEST['preco_custo']; ?>">R$</td>
-          </tr>
-          <tr>
-            <th scope="row"><label>Preço Venda*</label></th>
-            <td><input type="number" step="0.01" name="preco_venda" value="<?php if(isset($_REQUEST['preco_venda'])) echo $_REQUEST['preco_venda']; ?>">R$</td>
-          </tr>
-          <tr>
-            <th scope="row"><label>Imagem</label></th>
-            <td><Label type='button' for="image_path" class="button">Selecionar Imagem:</Label><Label><?php if(isset($_REQUEST['image_path'])){ echo basename($_REQUEST['image_path']); }?></label></td>
-            <input type="file" id='image_path' name="image_path" style='visibility:hidden;' accept='image/png, image/jpeg'>
-          </tr>
-          <tr>
-            <th scope="row"><label for="situacao">Ativo?</label></th>
-            <td><input type="checkbox" name="situacao" <?php if(isset($_REQUEST['situacao'])){ echo $_REQUEST['situacao'];} ?>></td>
-          </tr>
-          <tr>
-            <th>
-              <input type='submit' value='Concluir' class='button button-primary'>
-              <td>
-                <a href='/wp-admin/admin.php?page=kidspay-rel-produtos'>
-                  <input type='button' value='Listar' class='button button-secondary'>
-                </a>
-                <?php if(isset($acao)){
-                  if($acao != 'cad'){
-                    ?>
-                    <a href='?page=kidspay-cad-produtos&action=del&id=<?php if(isset($_REQUEST['id_produto'])) echo $_REQUEST['id_produto'];?>'>
-                      <input type='button' value='Deletar' class='button button-secondary'>
-                    </a>
-                    <?php
-                  }
-                }
-                ?>
-              </td>
-            </th>
-          </tr>
-          <tr>
-            <input type='hidden' name='action' value='<?php if(isset($acao)) echo "$acao"; else echo 'cad'; ?>'>
-
-            <input type='hidden' name='id' value='<?php if(isset($_REQUEST['id_produto'])) echo $_REQUEST['id_produto']; ?>'>
-          </tr>
-        </table>
-      <?php
+  function get_restricoes($aluno = null){
+    global $wpdb;
+    $aluno_where = '';
+    if($aluno){
+      $aluno_where = " id_aluno = ${aluno}";
     }
+    $resticoes = $wpdb->get_results("SELECT * FROM restricoes_produtos {$aluno_where}", ARRAY_A);
+    return $resticoes;
+  }
+
+
+
+  function cadastrar_produtos_html($acao){
+    add_thickbox();
+    ?>
+      <table class="form-table" enctype="multipart/form-data">
+        <tr>
+          <th scope="row"><label>Nome *</label></th>
+          <td><input type="text" name="nome" value="<?php if(isset($_REQUEST['nome'])) echo $_REQUEST['nome']; ?>"></td>
+        </tr>
+        <tr>
+          <th scope="row"><label>Descrição</label></th>
+          <td><textarea  name="descricao"><?php if(isset($_REQUEST['descricao'])) echo $_REQUEST['descricao'];?></textarea></td>
+        </tr>
+        <tr>
+          <th scope="row"><label>Preço Custo</label></th>
+          <td><input type="number" step="0.01" name="preco_custo" value="<?php if(isset($_REQUEST['preco_custo'])) echo $_REQUEST['preco_custo']; ?>">R$</td>
+        </tr>
+        <tr>
+          <th scope="row"><label>Preço Venda*</label></th>
+          <td><input type="number" step="0.01" name="preco_venda" value="<?php if(isset($_REQUEST['preco_venda'])) echo $_REQUEST['preco_venda']; ?>">R$</td>
+        </tr>
+        <tr>
+          <th scope="row"><label>Imagem</label></th>
+          <td><Label type='button' for="image_path" class="button">Selecionar Imagem:</Label><Label><?php if(isset($_REQUEST['image_path'])){ echo basename($_REQUEST['image_path']); }?></label></td>
+          <input type="file" id='image_path' name="image_path" style='visibility:hidden;' accept='image/png, image/jpeg'>
+        </tr>
+        <tr>
+          <th scope="row"><label for="situacao">Ativo?</label></th>
+          <td><input type="checkbox" name="situacao" <?php if(isset($_REQUEST['situacao'])){ echo $_REQUEST['situacao'];} ?>></td>
+        </tr>
+        <tr>
+          <th>
+            <input type='submit' value='Concluir' class='button button-primary'>
+            <td>
+              <a href='/wp-admin/admin.php?page=kidspay-rel-produtos'>
+                <input type='button' value='Listar' class='button button-secondary'>
+              </a>
+              <?php if(isset($acao)){
+                if($acao != 'cad'){
+                  ?>
+                  <a href='?page=kidspay-cad-produtos&action=del&id=<?php if(isset($_REQUEST['id_produto'])) echo $_REQUEST['id_produto'];?>'>
+                    <input type='button' value='Deletar' class='button button-secondary'>
+                  </a>
+                  <?php
+                }
+              }
+              ?>
+            </td>
+          </th>
+        </tr>
+        <tr>
+          <input type='hidden' name='action' value='<?php if(isset($acao)) echo "$acao"; else echo 'cad'; ?>'>
+
+          <input type='hidden' name='id' value='<?php if(isset($_REQUEST['id_produto'])) echo $_REQUEST['id_produto']; ?>'>
+        </tr>
+      </table>
+    <?php
+  }
 
 
 }

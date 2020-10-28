@@ -71,6 +71,7 @@ class KPComprasList extends WP_List_Table{
         case 'dtvenda':
           $tempo = strtotime($item[ $column_name ]);
           return date("d/m/Y - H:i", $tempo);
+
         case 'total':
           return "R$ " . number_format(floatval($item[ $column_name ]),2);
 

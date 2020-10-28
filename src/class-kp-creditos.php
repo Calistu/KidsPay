@@ -60,7 +60,6 @@ function kp_cred_tabs($aluno, $divname, $valor_crd=0){
 }
 
 function comprar_creditos_html(){
-
   $cliente = new KidsPayClientes();
   $qnt = kp_cred_menu_divtabs();
 

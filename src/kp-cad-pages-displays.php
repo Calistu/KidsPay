@@ -1,5 +1,6 @@
 <?php
 
+
 function kidspay_default_cad_page_display(){
   ?>
   <div class='wrap'>
@@ -30,6 +31,10 @@ function kidspay_restricoes_cad_page_display(){
     <h1 class='wp-heading-inline'>Restrições</h1>
     <hr class='wp-head-end'>
   </div>
+  <?php
+  $produtos = new KidsPayProdutos();
+  $produtos->restricoes_html_form();
+  ?>
   <?php
 }
 

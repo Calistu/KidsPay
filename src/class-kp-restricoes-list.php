@@ -5,7 +5,7 @@ if(!class_exists('WP_List_Table')){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class KPClientesList extends WP_List_Table{
+class KPRestricoesList extends WP_List_Table{
 
   public function prepare_items(){
 
@@ -31,52 +31,58 @@ class KPClientesList extends WP_List_Table{
   public function get_columns(){
 
         return array(
-          'id_cliente' => 'ID',
-          'nome' => 'Nome',
-          'dtnascto' => 'Data de Nascimento',
-          'rg' => 'RG',
-          'cpf' => 'CPF',
-          'dtaltera' => 'Data Alteração',
-          'situacao' => 'Situação'
+          'id_restricao' => 'ID',
+          'id_produto' => 'Produto',
+          'id_aluno' => 'Aluno',
+          'descricao' => 'Descricao',
         );
       }
 
       public function get_hidden_columns(){
-        return array('id_cliente');
+        return array('id_restricao');
       }
 
       public function get_sortable_columns(){
         return array(
-          'id_cliente' => array('id_cliente',true),
-          'nome' => array('nome', true),
-          'dtaltera' => array('daltera', true),
+          'id_aluno' => array('id_aluno',true),
+          'id_produto' => array('id_produto', true),
         );
       }
 
       private function table_data(){
         global $wpdb;
-        global $kpdb;
-
-        $data = $wpdb->get_results("SELECT * FROM clientes;", ARRAY_A);
-
+        $data = $wpdb->get_results("SELECT * FROM restricoes_produtos WHERE id_cliente = " . get_current_user_id(), ARRAY_A);
         return $data;
       }
 
-      public function column_default( $item, $column_name ){
-        switch($column_name){
-          case 'id_cliente':
-          case 'nome':
-          case 'dtnascto':
-          case 'rg':
-          case 'cpf':
-          case 'dtaltera':
-          case 'situacao':
-            return $item[ $column_name ];
+      function column_id_aluno( $item ){
+        global $wpdb;
+        $aluno = $wpdb->get_results("SELECT nome FROM alunos WHERE id_aluno = {$item['id_aluno']}",ARRAY_A)[0]['nome'];
+        return $aluno;
+      }
 
-          default:
-              return print_r( $item, true ) ;
+      function column_id_produto( $item ){
+        global $wpdb;
+        $produto = $wpdb->get_results("SELECT nome FROM produtos WHERE id_produto = {$item['id_produto']}",ARRAY_A)[0]['nome'];
+        $actions = array(
+          'delete' => sprintf("<a href='?page=kidspay-rel-restricoes&restricao=deletar&id=%s'>%s</a> ", $item['id_restricao'], __('Delete')),
+          'message' => sprintf("<a href='?&TB_inline&width=350&height=350&inlineId=restrict-box%s' class='thickbox'>%s</a>",  $item['id_produto'], __('Restrição'))
+
+        );
+
+        return sprintf('%s %s',
+            $produto,
+            $this->row_actions($actions));
+
+      }
+
+      function column_default( $item, $column_name ){
+        switch ( $column_name) {
+          case 'descricao':
+            return $item[$column_name];
         }
       }
+
 
       private function sort_data( $a, $b ){
         $orderby = 'id_cliente';

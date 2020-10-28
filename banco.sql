@@ -72,6 +72,17 @@ CREATE TABLE item_vendas (
     FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
 );
 
+CREATE TABLE restricoes_produtos(
+  id_restricao INT PRIMARY KEY AUTO_INCREMENT,
+  id_produto int,
+  id_cliente int,
+  id_aluno int,
+  descricao varchar(100),
+  FOREIGN KEY (id_produto) REFERENCES produtos(id_produto),
+  FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
+  FOREIGN KEY (id_aluno) REFERENCES alunos(id_aluno)
+);
+
 CREATE TABLE promocao_diaria (
   id_promocao int NOT NULL AUTO_INCREMENT,
   semana ENUM('segunda',  'terca', 'quarta', 'quinta', 'sexta'),

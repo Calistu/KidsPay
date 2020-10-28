@@ -34,14 +34,24 @@ function kidspay_restricoes_rel_page_display(){
   if ( ! class_exists( 'WP_List_Table' ) ) {
 	   require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
   }
-
-  echo "
+  ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Restrições</h1>
     <hr class='wp-head-end'>
+    <?php
+    $restricoes = new KPRestricoes();
+    $restricoes->requisicoes_processa_box();
 
+    $restricoes_array = $restricoes->get_restricoes();
+    foreach ($restricoes_array as $key => $value) {
+      $restricoes->restricoes_html_box($value['id_produto']);
+    }
+    $restricoes_list = new KPRestricoesList();
+    $restricoes_list->prepare_items();
+    $restricoes_list->display();
+    ?>
   </div>
-  ";
+  <?php
 }
 
 
@@ -65,9 +75,11 @@ function kidspay_produtos_rel_page_display(){
     <h1 class='wp-heading-inline'>Produtos</h1>
     <hr class='wp-head-end' id='prod-list'>
     <?php
+    $restricoes = new KPRestricoes();
+    $restricoes->requisicoes_processa_box();
+
     mostrar_grafico_produtos();
     $acao = '';
-    global $wpdb;
     if(isset($_REQUEST['action']))
       $acao = $_REQUEST['action'];
     $form = new KidsPayForms();
