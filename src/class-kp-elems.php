@@ -17,7 +17,16 @@ class KidsPayForms{
   function Print($msg) {
       ?>
       <div class="notice">
-          <p><?php _e( $msg, 'kidspay' ); ?></p>
+          <p><?php _e( $msg ); ?></p>
+      </div>
+      <?php
+  }
+
+  //mensagem personalizada de atualizacao
+  function PrintUpdate($msg) {
+      ?>
+      <div class="update-message notice inline notice-warning notice-alt">
+          <p><?php _e( $msg ); ?></p>
       </div>
       <?php
   }
@@ -26,7 +35,7 @@ class KidsPayForms{
   function PrintOk($msg) {
       ?>
       <div class="notice notice-success is-dismissible">
-          <p><?php _e( $msg, 'kidspay' ); ?></p>
+          <p><?php _e( $msg ); ?></p>
       </div>
       <?php
   }
@@ -37,7 +46,7 @@ class KidsPayForms{
      <div class="notice error my-acf-notice is-dismissible" >
         <p>
           <?php
-            _e( $msg , 'kidspay' );
+            _e( $msg );
             $this->erro = 1;
           ?>
         </p>

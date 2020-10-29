@@ -1,6 +1,18 @@
 <?php
 
 function kidspay_creditos_cmp_page_display(){
+
+  global $kp_notif;
+  if(isset($_REQUEST['visualizado'])){
+    $kp_notif->clean_saldozerado_notifs($_REQUEST['visualizado']);
+  }
+  $kp_notif->get_notifs();
+  foreach ($kp_notif->relat['saldo_zerado'] as $key => $value) {
+    if($key != 'qnt'){
+      $form->PrintUpdate($value['descricao'] . " <a class='action' style='text-decoration: none;' href='?page=kidspay-crd-comprar&visualizado={$value['id_notif']}'>Ok</a>");
+    }
+  }
+
   if(isset($_REQUEST['atualizando'])){
     global $wpdb;
     $cliente = new KidsPayClientes();
@@ -71,6 +83,21 @@ function kidspay_creditos_estorno_page_display(){
     <h1 class='wp-heading-inline'>Estornar Créditos</h1>
     <hr class='wp-head-end'>
   <?php
+
+  global $kp_notif;
+  if(isset($_REQUEST['visualizado'])){
+    $kp_notif->clean_estorno_notifs($_REQUEST['visualizado']);
+  }
+
+  $kp_notif->get_notifs();
+  foreach ($kp_notif->relat['estorno'] as $key => $value) {
+    if($key !== 'qnt'){
+      $form = new KidsPayForms();
+      $form->PrintUpdate($value['descricao'] . "<a class='action' style='text-decoration: none;' href='?page=kidspay-crd-estorno&visualizado={$value['id_notif']}'> Ok </a>");
+    }
+  }
+
+
     global $wpdb;
     $cliente = new KidsPayClientes();
     if(isset($_REQUEST['action'])){

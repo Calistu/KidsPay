@@ -94,6 +94,7 @@ class KPRestricoes{
         $aluno = $_REQUEST['aluno-restricao'];
       }else{
         $form->PrintErro("Escolha o aluno");
+        return ;
       }
       if(isset($_REQUEST['descricao-restricao'])){
         $descricao = $_REQUEST['descricao-restricao'];
@@ -102,11 +103,11 @@ class KPRestricoes{
         $produto = $_REQUEST['produto-restricao'];
       }else{
         $form->PrintErro("Insira o produto");
+        return ;
       }
       if(isset($_REQUEST['alterar-restricao'])){
         $alterar = $_REQUEST['alterar-restricao'];
       }
-
 
       if(!$alterar){
         $res = $wpdb->insert('restricoes_produtos',

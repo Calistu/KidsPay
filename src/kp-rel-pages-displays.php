@@ -1,14 +1,14 @@
 <?php
 
 function kidspay_default_rel_page_display(){
-  echo "
+  ?>
   <link rel='stylesheets' href='{}';>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>KidsPay</h1>
     <hr class='wp-head-end'>
 
   </div>
-  ";
+  <?php
 }
 
 function kidspay_compras_itens(){
@@ -21,7 +21,22 @@ function kidspay_compras_rel_page_display(){
     <h1 class='wp-heading-inline'>Compras</h1>
     <hr class='wp-head-end'>
     <?php
+    $form = new KidsPayForms();
+
     mostrar_grafico_vendas();
+
+    global $kp_notif;
+    if(isset($_REQUEST['visualizado'])){
+      $kp_notif->clean_compras_notifs($_REQUEST['visualizado']);
+    }
+
+    $kp_notif->get_notifs();
+    foreach ($kp_notif->relat['compras'] as $key => $value) {
+      if($key !== 'qnt'){
+        $form->PrintUpdate($value['descricao'] . " <a class='action' style='text-decoration: none;' href='?page=kidspay-rel-tools&visualizado={$value['id_notif']}'> Ok </a>");
+      }
+    }
+
     $compras = new KPComprasList();
     $compras->prepare_items();
     $compras->display();
@@ -46,6 +61,7 @@ function kidspay_restricoes_rel_page_display(){
     foreach ($restricoes_array as $key => $value) {
       $restricoes->restricoes_html_box($value['id_produto']);
     }
+
     $restricoes_list = new KPRestricoesList();
     $restricoes_list->prepare_items();
     $restricoes_list->display();

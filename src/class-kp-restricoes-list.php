@@ -32,9 +32,9 @@ class KPRestricoesList extends WP_List_Table{
 
         return array(
           'id_restricao' => 'ID',
+          'descricao' => 'Descricao',
           'id_produto' => 'Produto',
           'id_aluno' => 'Aluno',
-          'descricao' => 'Descricao',
         );
       }
 
@@ -64,23 +64,20 @@ class KPRestricoesList extends WP_List_Table{
       function column_id_produto( $item ){
         global $wpdb;
         $produto = $wpdb->get_results("SELECT nome FROM produtos WHERE id_produto = {$item['id_produto']}",ARRAY_A)[0]['nome'];
+        return $produto;
+      }
+
+      function column_descricao( $item ){
+        global $wpdb;
         $actions = array(
           'delete' => sprintf("<a href='?page=kidspay-rel-restricoes&restricao=deletar&id=%s'>%s</a> ", $item['id_restricao'], __('Delete')),
           'message' => sprintf("<a href='?&TB_inline&width=350&height=350&inlineId=restrict-box%s' class='thickbox'>%s</a>",  $item['id_produto'], __('Restrição'))
-
         );
 
         return sprintf('%s %s',
-            $produto,
+            $item['descricao'],
             $this->row_actions($actions));
 
-      }
-
-      function column_default( $item, $column_name ){
-        switch ( $column_name) {
-          case 'descricao':
-            return $item[$column_name];
-        }
       }
 
 

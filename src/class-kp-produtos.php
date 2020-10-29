@@ -19,6 +19,12 @@ class KidsPayProdutos extends KidsPayForms{
       5 => 'sexta'
     );
     $form = new KidsPayForms();
+    if(isset($_REQUEST['reseta'])){
+      $res = $wpdb->query('DELETE FROM promocao_diaria');
+      if(!$res){
+        $form->Print("Nada Atualizado");
+      }
+    }else
     if(isset($_REQUEST['atualiza'])){
       foreach ($dias as $key => $value) {
         if(isset($_REQUEST['produto-' . $dias[$key]])){
@@ -48,7 +54,6 @@ class KidsPayProdutos extends KidsPayForms{
             ),array(
               'semana' => $dias2[$key])
             );
-
             if(!$res){
               $erro = $wpdb->get_results("SHOW ERRORS");
               if($erro){
@@ -90,7 +95,7 @@ class KidsPayProdutos extends KidsPayForms{
 
               <div class='promocao-inputs'>
                 <Label style="font-weight:bold;">Valor:</Label>
-                <input class="text" type="text" type='number' name='valor-<?php echo $value;?>' class='text' value='<?php if(isset($_REQUEST['valor-'.$value])) echo $_REQUEST['valor-'.$value]; ?>'>
+                <input class="text" type="text" type='number' name='valor-<?php echo $value;?>' class='text' value='<?php if(isset($_REQUEST['valor-'.$value])) echo number_format(floatval($_REQUEST['valor-'.$value]),2); ?>'>
               </div>
 
               <select size="5" id='produto_select<?php echo $value;?>' name='produto-<?php echo $value;?>' class='button-secondary'>

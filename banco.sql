@@ -84,11 +84,24 @@ CREATE TABLE restricoes_produtos(
 );
 
 CREATE TABLE promocao_diaria (
-  id_promocao int NOT NULL AUTO_INCREMENT,
+  id_promocao INT NOT NULL AUTO_INCREMENT,
   semana ENUM('segunda',  'terca', 'quarta', 'quinta', 'sexta'),
-  id_produto int not null,
+  id_produto INT not null,
   nome varchar(200) not null,
   valor float(8,2) not null,
   PRIMARY KEY (id_promocao),
   FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
+);
+
+CREATE TABLE notificacoes(
+  id_notif INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  tipo_notif ENUM('restricao',  'compras', 'estorno'),
+  descricao varchar(200) not null,
+  visualizado tinyint not null default 0,
+  id_venda int,
+  id_cliente int,
+  id_aluno int,
+  FOREIGN KEY (id_venda) REFERENCES vendas(id_venda),
+  FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
+  FOREIGN KEY (id_aluno) REFERENCES alunos(id_aluno)
 );

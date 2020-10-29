@@ -16,7 +16,7 @@ function mostrar_grafico_clientes(){
     <script type="text/javascript">
     window.onload = function () {
 
-    var chart = new CanvasJS.Chart("chartContainer", {
+    var chart = new CanvasJS.Chart("chartContainerClientes", {
     	theme: "light1", // "light2", "dark1", "dark2"
     	animationEnabled: false, // change to true
     	title:{
@@ -40,7 +40,7 @@ function mostrar_grafico_clientes(){
     </script>
     </head>
     <body>
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <div id="chartContainerClientes" style="height: 370px; width: 100%;"></div>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"> </script>
   <?php
 }
@@ -64,7 +64,7 @@ function mostrar_grafico_produtos(){
 
   <script>
   window.onload = function() {
-  var chart = new CanvasJS.Chart("chartContainer", {
+  var chart = new CanvasJS.Chart("chartContainerProdutos", {
   	animationEnabled: true,
   	title: {
   		text: "<?php if(!current_user_can("manage_options")) echo "Produto mais comprados"; else echo "Produto mais vendidos"; ?>"
@@ -80,7 +80,7 @@ function mostrar_grafico_produtos(){
   chart.render();
   }
   </script>
-  <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+  <div id="chartContainerProdutos" style="height: 300px; width: 100%;"></div>
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
   <?php
 }
@@ -137,7 +137,7 @@ function mostrar_grafico_vendas(){
   <script>
   window.onload = function() {
 
-  var chart = new CanvasJS.Chart("chartContainer", {
+  var chart = new CanvasJS.Chart("chartContainerCompras", {
   	animationEnabled: true,
   	theme: "light2",
   	title:{
@@ -157,6 +157,7 @@ function mostrar_grafico_vendas(){
 
   }
   </script>
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
   <div>
     <form method="post" action='?page=kidspay-rel-tools'>
       <table class='form-table'>
@@ -213,11 +214,9 @@ function mostrar_grafico_vendas(){
           </select>
           <input type="submit" value='Selecionar Aluno' class='button'>
         </td>
-        </tr>
       </table>
-      <div id="chartContainer"></div>
+      <div id="chartContainerCompras" style="height: 350px; width: 100%;"></div>
     </form>
   </div>
-  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
   <?php
 }

@@ -42,7 +42,7 @@ function kp_cred_tabs($aluno, $divname, $valor_crd=0){
         <table class="form-table" >
           <tr>
             <th scope="row"><label>Saldo Atual</label></th>
-            <td>R$ <input readonly type='number' id="credito-aluno" value='<?php echo "{$valor_crd}"; ?>'></td>
+            <td>R$ <input readonly type='number' id="credito-aluno" value='<?php echo number_format(floatval($valor_crd),2); ?>'></td>
           </tr>
           <tr>
             <th scope="row"><label>Valor</label></th>
