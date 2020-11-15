@@ -4,6 +4,9 @@ if( !defined('ABSPATH')){
   die(ERRO_ABSPATH);
 }
 
+define( 'KIDSPAY_CLI' , 'read');
+define( 'KIDSPAY_ADMIN' , 'edit_posts');
+
 class KidsPayDB{
   public $prefix;
 }
@@ -31,6 +34,24 @@ Class KidsPayPlugin{
   }
 }
 
+function validate_admin_perm(){
+  ?>
+  <div class='wrap'>
+    <h1 class='wp-heading-inline'>Acesso Negado</h1>
+    <hr class='wp-head-end'>
+  <?php
+  $form = new KidsPayForms();
+  if(current_user_can(KIDSPAY_ADMIN)){
+    $form->PrintErro('Sem Permissão para acessar componente');
+    return 1;
+  }
+  ?>
+  </div>
+  <?php
+  return 0;
+}
+
+
 function registrar_login(){
   global $wpdb;
   global $usuario_atual;
@@ -53,6 +74,7 @@ add_action('admin_menu', 'registrar_login');
 add_action('admin_menu', 'registrar_cadastros');
 add_action('admin_menu', 'registrar_relatorios');
 add_action('admin_menu', 'registrar_creditos');
+add_action('admin_menu', 'registrar_ferramentas');
 
 register_activation_hook(KP_PLUGIN_FILE, array($KidsPay, 'ativar'));
 register_deactivation_hook(KP_PLUGIN_FILE, array($KidsPay, 'desativar'));

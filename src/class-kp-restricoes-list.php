@@ -35,6 +35,7 @@ class KPRestricoesList extends WP_List_Table{
           'descricao' => 'Descricao',
           'id_produto' => 'Produto',
           'id_aluno' => 'Aluno',
+          'ativo' => 'Status',
         );
       }
 
@@ -67,12 +68,24 @@ class KPRestricoesList extends WP_List_Table{
         return $produto;
       }
 
+      function column_ativo( $item ){
+        global $wpdb;
+        if($item['ativo'] == 1)
+          return 'Ativo';
+        else
+          return 'Inativo';
+      }
+
       function column_descricao( $item ){
         global $wpdb;
         $actions = array(
-          'delete' => sprintf("<a href='?page=kidspay-rel-restricoes&restricao=deletar&id=%s'>%s</a> ", $item['id_restricao'], __('Delete')),
-          'message' => sprintf("<a href='?&TB_inline&width=350&height=350&inlineId=restrict-box%s' class='thickbox'>%s</a>",  $item['id_produto'], __('Restrição'))
+          'delete' => sprintf("<a href='?page=kidspay-rel-restricoes&acao=deletar&id=%s'>%s</a> ", $item['id_restricao'], __('Delete')),
+          'editar' => sprintf("<a href='?page=kidspay-cad-restricoes&selecionar&produto=%s&aluno=%s'>%s</a> ", $item['id_produto'], $item['id_aluno'], __('Editar')),
         );
+        if($item['ativo'] == 1)
+          $actions['desativar'] = sprintf("<a href='?page=kidspay-rel-restricoes&acao=desativar&id=%s'>%s</a>",  $item['id_restricao'], __('Desativar'));
+        else
+          $actions['ativer'] = sprintf("<a href='?page=kidspay-rel-restricoes&acao=ativar&id=%s'>%s</a>",  $item['id_restricao'], __('Ativar'));
 
         return sprintf('%s %s',
             $item['descricao'],

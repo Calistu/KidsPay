@@ -4,8 +4,12 @@
 function kidspay_default_cad_page_display(){
   ?>
   <div class='wrap'>
-    <h1 class='wp-heading-inline'>Cadastros</h1>
+    <h1 class='wp-heading-inline'>Informações Cadastrais</h1>
     <hr class='wp-head-end'>
+    <?php
+    $cliente = new KidsPayClientes();
+    $cliente->display_cad_form();
+    ?>
   </div>
 
   <?php
@@ -26,20 +30,98 @@ function kidspay_prod_semanal_cad_page_display(){
 }
 
 function kidspay_restricoes_cad_page_display(){
+  global $wpdb;
+
+
+  if(isset($_REQUEST['selecionar']) or isset($_REQUEST['confirmar'])){
+    $form = new KidsPayForms();
+
+    if(isset($_REQUEST['aluno']) and $_REQUEST['aluno'] !== 'vazio')
+      $aluno = $_REQUEST['aluno'];
+    else{
+      $form->PrintOk("Selecione o aluno");
+      $aluno = 'vazio';
+    }
+
+    if(isset($_REQUEST['produto']) and $_REQUEST['produto'] !== 'vazio')
+      $produto = $_REQUEST['produto'];
+    else{
+      $form->PrintOk("Selecione o produto");
+      $produto = 'vazio';
+    }
+
+    if(isset($_REQUEST['descricao']))
+      $descricao = $_REQUEST['descricao'];
+    else{
+      $descricao = '';
+    }
+    if(isset($_REQUEST['ativo']))
+      $ativo = 1;
+    else
+      $ativo = 0;
+
+    if(isset($_REQUEST['confirmar'])){
+      $res = $wpdb->get_results("SELECT * FROM restricoes_produtos WHERE id_aluno = {$aluno} and id_produto = {$produto} and id_cliente = " . get_current_user_id());
+      if(!$res){
+        $res = $wpdb->insert("restricoes_produtos", array('id_aluno' => $aluno, 'id_produto' => $produto, 'ativo'=> $ativo, 'id_cliente' => get_current_user_id(), 'descricao'=> $descricao));
+        if(!$res){
+          $form->Print("Não foi possível inserir restrição");
+        }else{
+          $form->PrintOk("Restrição criada com sucesso");
+        }
+      }else{
+        $res = $wpdb->update("restricoes_produtos", array('descricao' => $descricao, 'ativo'=> $ativo), array('id_aluno' => $aluno, 'id_produto' => $produto, 'id_cliente' => get_current_user_id()));
+        if(!$res){
+          $res = $wpdb->get_results("SHOW ERRORS");
+          if(!$res){
+            $form->Print("Nada Atualizado");
+          }else{
+            $form->Print("Não foi possível atualizar");
+          }
+        }else{
+          $form->PrintOk("Atualizado com sucesso");
+        }
+
+      }
+    }
+
+    if(isset($_REQUEST['selecionar'])){
+      if($aluno !== 'vazio' && $produto !== 'vazio'){
+        $res = $wpdb->get_results("SELECT id_aluno, id_produto, descricao, ativo FROM restricoes_produtos WHERE id_aluno = {$aluno} and id_produto = {$produto} and id_cliente = " . get_current_user_id(), ARRAY_A);
+        if($res){
+          foreach ($res as $key => $value) {
+            $_REQUEST['aluno'] = $value['id_aluno'];
+            $_REQUEST['produto'] = $value['id_produto'];
+            $_REQUEST['descricao'] = $value['descricao'];
+            $_REQUEST['ativo'] = $value['ativo'];
+            $_REQUEST['existe'] = 1;
+          }
+        }else{
+          $_REQUEST['descricao'] = '';
+          $_REQUEST['ativo'] = 0;
+          $_REQUEST['existe'] = 0;
+        }
+      }
+    }
+  }
+
   ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Restrições</h1>
     <hr class='wp-head-end'>
   </div>
+  <form action='?page=kidspay-cad-restricoes' method='post'>
   <?php
-  $produtos = new KidsPayProdutos();
-  $produtos->restricoes_html_form();
+  $restricao = new KPRestricoes();
+  $restricao->get_html_form();
   ?>
+  </form>
   <?php
 }
 
 function kidspay_produtos_cad_page_display(){
   $acao = '';
+  $form = new KidsPayForms();
 
   global $wpdb;
   $produto = new KidsPayProdutos();
@@ -54,7 +136,6 @@ function kidspay_produtos_cad_page_display(){
     <?php
       $id = '';
       $uploadOk = 1;
-      $form = new KidsPayForms();
       switch ($acao) {
         case 'cad':
 

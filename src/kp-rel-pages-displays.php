@@ -46,22 +46,42 @@ function kidspay_compras_rel_page_display(){
 }
 
 function kidspay_restricoes_rel_page_display(){
-  if ( ! class_exists( 'WP_List_Table' ) ) {
-	   require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+
+  global $wpdb;
+  $form = new KidsPayForms();
+  if(isset($_REQUEST['acao'])){
+    $acao = $_REQUEST['acao'];
+    if(isset($_REQUEST['id'])){
+      $id = $_REQUEST['id'];
+      switch ($acao) {
+        case 'ativar':
+          $res = $wpdb->update('restricoes_produtos',array('ativo'=>1), array('id_restricao' => $id, 'id_cliente' => get_current_user_id()));
+          if($res){
+            $form->PrintOk("Restrição Ativada");
+          }
+          break;
+        case 'desativar':
+          $res = $wpdb->update('restricoes_produtos',array('ativo'=>0), array('id_restricao' => $id, 'id_cliente' => get_current_user_id()));
+          if($res){
+            $form->PrintOk("Restrição Desativada");
+          }
+          break;
+        case 'deletar':
+          $res = $wpdb->delete('restricoes_produtos', array('id_restricao' => $id, 'id_cliente' => get_current_user_id()));
+          if($res){
+            $form->PrintOk("Restrição Deletada");
+          }
+          break;
+      }
+    }else{
+      $form->PrintErro("Requisição incompleta");
+    }
   }
   ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Restrições</h1>
     <hr class='wp-head-end'>
     <?php
-    $restricoes = new KPRestricoes();
-    $restricoes->requisicoes_processa_box();
-
-    $restricoes_array = $restricoes->get_restricoes();
-    foreach ($restricoes_array as $key => $value) {
-      $restricoes->restricoes_html_box($value['id_produto']);
-    }
-
     $restricoes_list = new KPRestricoesList();
     $restricoes_list->prepare_items();
     $restricoes_list->display();
@@ -72,16 +92,18 @@ function kidspay_restricoes_rel_page_display(){
 
 
 function kidspay_clientes_rel_page_display(){
-  echo "
+  ?>
   <div class='wrap'>
     <h1 class='wp-heading-inline'>Clientes</h1>
     <hr class='wp-head-end'>";
+    <?php
     mostrar_grafico_clientes();
     $compras = new KPClientesList();
     $compras->prepare_items();
     $compras->display();
-  "</div>
-  ";
+    ?>
+  </div>
+  <?php
 }
 
 
@@ -91,8 +113,7 @@ function kidspay_produtos_rel_page_display(){
     <h1 class='wp-heading-inline'>Produtos</h1>
     <hr class='wp-head-end' id='prod-list'>
     <?php
-    $restricoes = new KPRestricoes();
-    $restricoes->requisicoes_processa_box();
+    global $wpdb;
 
     mostrar_grafico_produtos();
     $acao = '';

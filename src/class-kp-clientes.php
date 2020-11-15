@@ -164,12 +164,11 @@ class KidsPayClientes extends KidsPayForms{
           <table class="form-table" >
             <tr>
               <th scope="row"><label><?php if($divname!==$this->new_aluno_tab_name) echo "Aluno"; else echo $this->new_aluno_tab_name . " Aluno";?></label></th>
-              <td><input type="text" name="nome" value="<?php if($divname!==$this->new_aluno_tab_name) echo "{$divname}"; ?>"></td>
+              <td><input type="text" id='nome_alunos' name="nome" value="<?php if($divname!==$this->new_aluno_tab_name) echo "{$divname}"; ?>"></td>
             </tr>
             <tr>
               <td>
                 <input type='hidden' name='id' value='<?php echo "{$aluno}"; ?>'>
-
                 <input type='submit' value='<?php echo $action ?>' name="action" class='button button-primary'>
                 <?php
                   if($divname!=='Novo')
@@ -183,11 +182,31 @@ class KidsPayClientes extends KidsPayForms{
     <?php
   }
 
-
   public function cadastrar_alunos_html(){
 
     $qnt = $this->kp_aluno_menu_divtabs();
 
+  }
+
+  public function display_cad_form(){
+  ?>
+    <form method='post' action='#' ?>
+      <table class="form-table" >
+        <tr>
+          <th scope="row"><label>Data Nascimento</label></th>
+          <td><input class='text' type='text'></input></td>
+        </tr>
+        <tr>
+          <th scope="row"><label>RG</label></th>
+          <td><input class='text' type='text'></input></td>
+        </tr>
+        <tr>
+          <th scope="row"><label>CPF</label></th>
+          <td><input class='text' type='text'></input></td>
+        </tr>
+      </table>
+    </form>
+  <?php
   }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+require 'pagamento.php';
+
 function kidspay_creditos_cmp_page_display(){
 
   global $kp_notif;
@@ -12,11 +14,11 @@ function kidspay_creditos_cmp_page_display(){
       $form->PrintUpdate($value['descricao'] . " <a class='action' style='text-decoration: none;' href='?page=kidspay-crd-comprar&visualizado={$value['id_notif']}'>Ok</a>");
     }
   }
-
+  global $wpdb;
+  $cliente = new KidsPayClientes();
   if(isset($_REQUEST['atualizando'])){
-    global $wpdb;
-    $cliente = new KidsPayClientes();
-    if(isset($_REQUEST['atualizando'])){
+
+    if(isset($_REQUEST['kp_pag_autorizado']) and ($_REQUEST['kp_pag_autorizado'] === $hash)){
       if(isset($_REQUEST['aluno'])){
         $aluno = $_REQUEST['aluno'];
         if(isset($_REQUEST['valor'])){
@@ -41,12 +43,18 @@ function kidspay_creditos_cmp_page_display(){
                 array('id_aluno' => $aluno)
               );
 
-              $cliente->PrintOk('Recarregado com sucesso');
+              $cliente->PrintOk("Recarregado com sucesso");
             }
           }
         }
       }else{
         $cliente->PrintErro('Não foi possível identificar aluno');
+      }
+    }else{
+      $sessao =  KPPagSeguro_criar_sessao();
+      if($sessao){
+        $cliente->PrintOk("Código de sessão criado " . $sessao);
+        $hash = KPPagSeguro_receber_autorizacao();
       }
     }
   }
@@ -96,72 +104,70 @@ function kidspay_creditos_estorno_page_display(){
       $form->PrintUpdate($value['descricao'] . "<a class='action' style='text-decoration: none;' href='?page=kidspay-crd-estorno&visualizado={$value['id_notif']}'> Ok </a>");
     }
   }
-
-
-    global $wpdb;
-    $cliente = new KidsPayClientes();
-    if(isset($_REQUEST['action'])){
-      $action = $_REQUEST['action'];
-      switch ($action) {
-        case 'est':
-          if(isset($_REQUEST['id']))
-            $id = $_REQUEST['id'];
-          else{
-            $cliente->Print("Requisição Inválida");
-            break;
-          }
-          $creditos = $cliente->getCredHist($id);
-          if($creditos){
-            $aluno = $creditos[0]['id_aluno'];
-            $alunos = $cliente->get_alunos($aluno);
-            if($creditos[0]['valor'] > $alunos[0]['saldo']){
-              $cliente->PrintErro("O saldo já foi usado");
-              break;
-            }
-
-          }else{
-            break;
-          }
-          $wpdb->update('credito_clientes',
-          array('situacao' => 'E'),
-          array('id_credito_cliente' => $id));
+  global $wpdb;
+  $cliente = new KidsPayClientes();
+  if(isset($_REQUEST['action'])){
+    $action = $_REQUEST['action'];
+    switch ($action) {
+      case 'est':
+        if(isset($_REQUEST['id']))
+          $id = $_REQUEST['id'];
+        else{
+          $cliente->Print("Requisição Inválida");
+          break;
+        }
+        $creditos = $cliente->getCredHist($id);
+        if($creditos){
+          $aluno = $creditos[0]['id_aluno'];
           $alunos = $cliente->get_alunos($aluno);
+          if($creditos[0]['valor'] > $alunos[0]['saldo']){
+            $cliente->PrintErro("O saldo já foi usado");
+            break;
+          }
 
-          $wpdb->update('alunos',
-          array('saldo' => $alunos[0]['saldo']),
-          array('id_aluno' => $id));
+        }else{
           break;
+        }
+        $wpdb->update('credito_clientes',
+        array('situacao' => 'E'),
+        array('id_credito_cliente' => $id));
+        $alunos = $cliente->get_alunos($aluno);
 
-        case 'ativ':
-          if(isset($_REQUEST['id']))
-            $id = $_REQUEST['id'];
-          else{
-            $cliente->Print("Requisição Inválida");
-            break;
-          }
-          $creditos = $cliente->getCredHist($id);
-          if($creditos){
-            $aluno = $creditos[0]['id_aluno'];
-            $alunos = $cliente->get_alunos($aluno);
-          }else{
-            break;
-          }
+        $wpdb->update('alunos',
+        array('saldo' => $alunos[0]['saldo']),
+        array('id_aluno' => $id));
+        break;
 
-          $wpdb->update('credito_clientes',
-          array('situacao' => 'A'),
-          array('id_credito_cliente' => $id));
-
+      case 'ativ':
+        if(isset($_REQUEST['id']))
+          $id = $_REQUEST['id'];
+        else{
+          $cliente->Print("Requisição Inválida");
+          break;
+        }
+        $creditos = $cliente->getCredHist($id);
+        if($creditos){
+          $aluno = $creditos[0]['id_aluno'];
           $alunos = $cliente->get_alunos($aluno);
-
-          $wpdb->update('alunos',
-          array('saldo' => $alunos[0]['saldo']),
-          array('id_aluno' => $id));
+        }else{
           break;
+        }
 
-        default:
-          // code...
-          break;
-      }
+        $wpdb->update('credito_clientes',
+        array('situacao' => 'A'),
+        array('id_credito_cliente' => $id));
+
+        $alunos = $cliente->get_alunos($aluno);
+
+        $wpdb->update('alunos',
+        array('saldo' => $alunos[0]['saldo']),
+        array('id_aluno' => $id));
+        break;
+
+      default:
+        // code...
+        break;
     }
-    estornar_creditos_html();
+  }
+  estornar_creditos_html();
 }

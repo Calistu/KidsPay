@@ -1,4 +1,5 @@
 <?php
+
 function kp_cred_menu_divtabs(){
   ?>
 
@@ -49,7 +50,8 @@ function kp_cred_tabs($aluno, $divname, $valor_crd=0){
             <td>R$ <input id="valor" type="number" name="valor"></td>
           </tr>
           <tr>
-            <td><input type='submit' value='Concluir' class='button button-primary'></td>
+            <span class="endereco" data-endereco="<?php echo URL; ?>"></span>
+            <td><input type='submit' onclick="pagamento()" value='Concluir' class='button button-primary'></td>
             <input type='hidden' name='atualizando' value='true'>
             <input type='hidden' name='aluno' value='<?php echo "{$aluno}"; ?>'>
           </tr>

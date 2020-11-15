@@ -60,5 +60,4 @@ function baixar_imagem($input_name){
   }else{
     $form->Print("Aviso! produto sem imagem");
   }
-
 }

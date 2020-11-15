@@ -8,8 +8,6 @@ function mostrar_grafico_clientes(){
     foreach ($clientes as $key => $value) {
       $dataPoints[] = array("y" => $value['sum(total)'], "label" => $value['nome']);
     }
-  }else{
-    return ;
   }
 
   ?>

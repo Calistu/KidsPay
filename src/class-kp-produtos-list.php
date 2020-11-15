@@ -37,11 +37,7 @@ class KPProdutosList extends WP_List_Table{
     $data = array_slice($data,(($currentPage-1)*$perPage),$perPage);
     $this->_column_headers = array($columns, $hidden, $sortable);
     $this->items = $data;
-    foreach ($data as $key => $value) {
 
-      $restricoes = new KPRestricoes();
-      $restricoes->restricoes_html_box($value['id_produto']);
-    }
     $this->process_bulk_action();
   }
 
@@ -69,12 +65,15 @@ class KPProdutosList extends WP_List_Table{
   }
 
   public function column_nome($item){
-    $actions = array(
-      'edit' => sprintf("<a href='?page=kidspay-cad-produtos&action=alt&id=%s'>%s</a> ", $item['id_produto'], __( 'Change' )),
-      'delete' => sprintf("<a href='?page=kidspay-rel-produtos&action=del&id=%s'>%s</a> ", $item['id_produto'], __('Delete')),
-      'message' => sprintf("<a href='?&TB_inline&width=350&height=350&inlineId=restrict-box%s' class='thickbox'>%s</a>",  $item['id_produto'], __('Restrição'))
-
-    );
+    if(current_user_can("manage_options")){
+      $actions = array(
+        'edit' => sprintf("<a href='?page=kidspay-cad-produtos&action=alt&id=%s'>%s</a> ", $item['id_produto'], __( 'Change' )),
+        'delete' => sprintf("<a href='?page=kidspay-rel-produtos&action=del&id=%s'>%s</a> ", $item['id_produto'], __('Delete')),
+        'restricao' => sprintf("<a href='?page=kidspay-cad-restricoes&produto=%s'>%s</a> ", $item['id_produto'], __('Restrição')),
+      );
+    }else{
+      $actions = array();
+    }
 
     return sprintf('%s %s',
         $item['nome'],
@@ -142,9 +141,11 @@ class KPProdutosList extends WP_List_Table{
   }
 
   function get_bulk_actions(){
-    $actions = array(
-      'delete' => __( 'Delete' )
-    );
+    $actions = array();
+
+    if(current_user_can("manage_options")){
+      $actions['delete'] = __( 'Delete' );
+    }
     return $actions;
   }
 

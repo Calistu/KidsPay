@@ -1,3 +1,10 @@
+
+jQuery(function(){
+  $j = jQuery.noConflict();
+  $j('#selecionar').click();
+
+});
+
 function carrega_div(id ){
   button = document.getElementById(id);
   if(button){

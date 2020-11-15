@@ -77,6 +77,7 @@ CREATE TABLE restricoes_produtos(
   id_produto int,
   id_cliente int,
   id_aluno int,
+  ativo int,
   descricao varchar(100),
   FOREIGN KEY (id_produto) REFERENCES produtos(id_produto),
   FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),

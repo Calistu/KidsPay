@@ -13,6 +13,7 @@ require_once __DIR__ . '/kp-html-sources.php';
 require_once __DIR__ . '/kp-cad-pages-displays.php';
 require_once __DIR__ . '/kp-rel-pages-displays.php';
 require_once __DIR__ . '/kp-crd-pages-displays.php';
+require_once __DIR__ . '/kp-tools-pages-displays.php';
 
 require_once __DIR__ . '/class-kp-elems.php';
 
@@ -36,5 +37,7 @@ require_once __DIR__ . '/kp-graphs-sources.php';
 require_once __DIR__ . '/class-kp-tools.php';
 
 require_once __DIR__ . '/class-kp-notificacoes.php';
+
+//require_once __DIR__ . '/api/pagseguro/pagamento.php';
 
 require_once __DIR__ . '/class-kp-plugin.php';

@@ -145,6 +145,14 @@ class KidsPayProdutos extends KidsPayForms{
   }
 
 
+  function get_produtos($id=0){
+    global $wpdb;
+    $where = '';
+    if($id)
+      $where = "WHERE id_produto = {$id}";
+    $res = $wpdb->get_results("SELECT * FROM produtos ${where}", ARRAY_A);
+    return $res;
+  }
 
   function cadastrar_produtos_html($acao){
     add_thickbox();

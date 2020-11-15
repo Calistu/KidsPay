@@ -50,7 +50,7 @@ class KidsPayProdutosWidget extends WP_Widget {
 
         case 'mais_vendas':
           $label = "Mais Vendidos:";
-          $query = 'select p.* from produtos as p inner join item_vendas as v on v.id_produto = p.id_produto';
+          $query = 'select p.* from produtos as p inner join item_vendas as v on v.id_produto = p.id_produto group by v.id_produto order by sum(v.quantidade) desc';
           break;
         case 'promocao':
           $label = "Promoção do dia:";
